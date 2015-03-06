@@ -1,4 +1,4 @@
-# brackets-es6-hello-world
+# brackets-npm-registry
 Boilerplate for a Brackets extension written in ES6
 
 ## gulp tasks
