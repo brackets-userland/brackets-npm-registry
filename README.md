@@ -1,5 +1,5 @@
 # brackets-npm-registry
-Boilerplate for a Brackets extension written in ES6
+Extension to install other extensions with npm
 
 ## gulp tasks
 
