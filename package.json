@@ -1,0 +1,40 @@
+{
+  "name": "brackets-npm-registry",
+  "version": "0.0.1",
+  "description": "Download extensions from NPM",
+  "keywords": [
+    "extensions",
+    "npm"
+  ],
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Martin Zagora",
+    "email": "zaggino@gmail.com",
+    "url": "https://github.com/zaggino"
+  },
+  "homepage": "https://github.com/zaggino/brackets-npm-registry",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaggino/brackets-git.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "brackets": ">=1.1.0"
+  },
+  "dependencies": {
+    "bluebird": "^2.9.13",
+    "npm": "^2.6.1"
+  },
+  "devDependencies": {
+    "babelify": "^5.0.4",
+    "browserify": "^9.0.3",
+    "esprima-fb": "^13001.1.0-dev-harmony-fb",
+    "gulp": "^3.8.11",
+    "gulp-eslint": "^0.5.0",
+    "gulp-util": "^3.0.4",
+    "through2": "^0.6.3"
+  }
+}
