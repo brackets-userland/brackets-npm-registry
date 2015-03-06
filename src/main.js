@@ -1,26 +1,32 @@
-'use strict';
+define(function (require) {
+  'use strict';
 
-let co = require('bluebird').coroutine;
-let SUCCESS = Symbol();
+  let AppInit = brackets.getModule('utils/AppInit');
+  let co = require('bluebird').coroutine;
+  let Logger = require('./utils/Logger');
+  let SUCCESS = Symbol();
 
-function promiseResponse() {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      resolve(SUCCESS);
-    }, 1);
-  });
-}
-
-let tryGenerators = co(function* () {
-  var response = yield promiseResponse();
-  if (response === SUCCESS) {
-    console.log('ES6 generators work!');
-  } else {
-    console.error('ES6 generators failed...');
+  function promiseResponse() {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve(SUCCESS);
+      }, 1);
+    });
   }
-});
 
-module.exports = function () {
-  console.log('brackets-npm-registry is starting...');
-  tryGenerators();
-};
+  let tryGenerators = co(function* () {
+    let response = yield promiseResponse();
+    if (response === SUCCESS) {
+      Logger.log('Hello world!');
+    } else {
+      throw new Error('Response has unexpected value: ' + response);
+    }
+  });
+
+  AppInit.appReady(function () {
+    // co functions return promises
+    tryGenerators()
+      .catch(e => Logger.error(e));
+  });
+
+});

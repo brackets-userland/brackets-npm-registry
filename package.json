@@ -1,40 +1,37 @@
 {
-  "name": "brackets-npm-registry",
-  "version": "0.0.1",
-  "description": "Download extensions from NPM",
-  "keywords": [
-    "extensions",
-    "npm"
-  ],
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "name": "brackets-es6-hello-world",
+  "version": "0.0.2",
+  "description": "Boilerplate for a Brackets extension written in ES6",
+  "keywords": ["brackets-extension", "boilerplate", "hello-world"],
+  "homepage": "https://github.com/zaggino/brackets-es6-hello-world",
+  "bugs": "https://github.com/zaggino/brackets-es6-hello-world/issues",
+  "license": "MIT",
   "author": {
     "name": "Martin Zagora",
     "email": "zaggino@gmail.com",
     "url": "https://github.com/zaggino"
   },
-  "homepage": "https://github.com/zaggino/brackets-npm-registry",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zaggino/brackets-git.git"
+    "url": "https://github.com/zaggino/brackets-es6-hello-world.git"
   },
-  "license": "MIT",
-  "engines": {
-    "brackets": ">=1.1.0"
+  "scripts": {
+    "test": "gulp test",
+    "install": "gulp build"
   },
   "dependencies": {
     "bluebird": "^2.9.13",
-    "npm": "^2.6.1"
-  },
-  "devDependencies": {
-    "babelify": "^5.0.4",
-    "browserify": "^9.0.3",
+    "babel-core": "^4.6.6",
+    "eslint": "^0.15.1",
     "esprima-fb": "^13001.1.0-dev-harmony-fb",
     "gulp": "^3.8.11",
+    "gulp-babel": "^4.0.0",
     "gulp-eslint": "^0.5.0",
+    "gulp-sourcemaps": "^1.5.0",
     "gulp-util": "^3.0.4",
     "through2": "^0.6.3"
+  },
+  "engines": {
+    "brackets": ">=1.2.0"
   }
 }

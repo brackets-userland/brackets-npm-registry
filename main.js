@@ -1,20 +1,16 @@
-/*globals define*/
-
-'use strict';
-
 define(function (require, exports, module) {
+  'use strict';
 
+  // styling
   var ExtensionUtils = brackets.getModule('utils/ExtensionUtils');
   ExtensionUtils.loadStyleSheet(module, 'styles/main.less');
 
-
-  // require('dist/browser-polyfill');
-  // require('dist/main')();
+  // launch compiled js code
+  require('dist/main');
 
   /*
-  if (window.isBracketsTestWindow) {
-
-  }
+  // TODO: provide base for writing unit tests
+  if (window.isBracketsTestWindow) { }
   */
 
 });

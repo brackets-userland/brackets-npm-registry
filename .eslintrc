@@ -107,7 +107,7 @@ rules:
   #Strict Mode
   global-strict: 0 #deprecated
   no-extra-strict: 0 #deprecated
-  strict: [2, "global"] #controls location of Use Strict Directives
+  strict: [2, "function"] #controls location of Use Strict Directives
   
   #Variables
   no-catch-shadow: 2 #disallow the catch clause parameter name being the same as a variable in the outer scope
@@ -171,7 +171,7 @@ rules:
   
   #Legacy
   max-depth: [2, 5] #specify the maximum depth that blocks can be nested
-  max-len: [1, 80] #specify the maximum length of a line in your program
+  max-len: [1, 100] #specify the maximum length of a line in your program
   max-params: [2, 5] #limits the number of parameters that can be used in the function declaration.
   max-statements: [1, 50] #specify the maximum number of statement allowed in a function
   no-bitwise: 2 #disallow use of bitwise operators
@@ -179,3 +179,4 @@ rules:
   
 globals:
   brackets: false
+  define: false
