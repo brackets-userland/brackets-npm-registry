@@ -1,4 +1,4 @@
-# brackets-npm-registry
+# brackets-npm-registry [![Build Status](https://travis-ci.org/zaggino/brackets-npm-registry.svg?branch=master)](https://travis-ci.org/zaggino/brackets-npm-registry)
 Extension to install other extensions with npm
 
 ## gulp tasks

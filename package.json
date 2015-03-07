@@ -2,7 +2,11 @@
   "name": "brackets-npm-registry",
   "version": "0.0.2",
   "description": "Boilerplate for a Brackets extension written in ES6",
-  "keywords": ["brackets-extension", "boilerplate", "hello-world"],
+  "keywords": [
+    "brackets-extension",
+    "boilerplate",
+    "hello-world"
+  ],
   "homepage": "https://github.com/zaggino/brackets-npm-registry",
   "bugs": "https://github.com/zaggino/brackets-npm-registry/issues",
   "license": "MIT",
@@ -16,12 +20,12 @@
     "url": "https://github.com/zaggino/brackets-npm-registry.git"
   },
   "scripts": {
-    "test": "gulp test",
+    "test": "mocha",
     "install": "gulp build"
   },
   "dependencies": {
-    "bluebird": "^2.9.13",
     "babel-core": "^4.6.6",
+    "bluebird": "^2.9.13",
     "eslint": "^0.15.1",
     "esprima-fb": "^13001.1.0-dev-harmony-fb",
     "gulp": "^3.8.11",
@@ -29,9 +33,15 @@
     "gulp-eslint": "^0.5.0",
     "gulp-sourcemaps": "^1.5.0",
     "gulp-util": "^3.0.4",
+    "npm": "^2.7.0",
+    "request": "^2.53.0",
     "through2": "^0.6.3"
   },
   "engines": {
     "brackets": ">=1.2.0"
+  },
+  "devDependencies": {
+    "chai": "^2.1.1",
+    "mocha": "^2.2.0"
   }
 }

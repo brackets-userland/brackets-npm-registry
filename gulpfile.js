@@ -31,6 +31,12 @@ function logPipe(str) {
   });
 }
 
+// prevents watch from crashing on errors
+function swallowError (error) {
+  console.log(error.toString());
+  this.emit('end');
+}
+
 // helper for transpiling es6 files to es5
 function doBabel(globs, singleFile) {
   if (singleFile) {
@@ -40,6 +46,7 @@ function doBabel(globs, singleFile) {
   var task = gulp.src(globs, {base: path.resolve(__dirname, 'src')})
     .pipe(sourcemaps.init())
     .pipe(babel(babelOptions))
+    .on('error', swallowError)
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(DIST_DIR));
 
