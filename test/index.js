@@ -7,6 +7,10 @@ describe('npm-domain', function () {
 
     it('should return a list of extensions', function (done) {
 
+      if (process.env.TRAVIS) {
+        return done();
+      }
+
       this.timeout(100000);
 
       npmDomain.getExtensions(function (err, response) {
