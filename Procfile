@@ -1,1 +1,1 @@
-web: node server.js
+web: npm test && node server.js

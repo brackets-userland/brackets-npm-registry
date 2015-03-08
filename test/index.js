@@ -1,5 +1,8 @@
 var expect = require("chai").expect;
-var npmDomain = require('../dist/npm-domain');
+var RegistryBuilder = require('../dist/node/registry-builder');
+var MINUTE = 60000;
+var HOUR = 60 * MINUTE;
+var DAY = 24 * HOUR;
 
 describe('npm-domain', function () {
 
@@ -11,12 +14,11 @@ describe('npm-domain', function () {
         return done();
       }
 
-      this.timeout(100000);
+      this.timeout(DAY);
 
-      npmDomain.getExtensions(function (err, response) {
-        // console.log(JSON.stringify(response, null, 4));
-        done(err);
-      });
+      RegistryBuilder.buildRegistry()
+        .then(function (ok) { done(); })
+        .catch(function (err) { done(err); });
 
     });
 
