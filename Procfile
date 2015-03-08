@@ -1,1 +1,1 @@
-web: npm search brackets-extension && node server.js
+web: node server.js

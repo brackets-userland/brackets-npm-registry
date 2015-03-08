@@ -1,4 +1,4 @@
-var npmDomain = require('./dist/npm-domain');
+var registryBuilder = require('./dist/node/registry-builder');
 var express = require('express');
 var app = express();
 
@@ -6,9 +6,9 @@ app.set('port', (process.env.PORT || 5000));
 
 app.get('/registry', function (request, response, next) {
 
-  npmDomain.getExtensions()
-    .then(function (result) {
-      response.send(result);
+  registryBuilder.buildRegistry()
+    .then(function (registry) {
+      response.send(registry);
     })
     .catch(function (err) {
       next(err);
@@ -23,3 +23,7 @@ app.get('/', function(request, response) {
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));
 });
+
+setTimeout(function () {
+  registryBuilder.buildRegistry();
+}, 1000);
