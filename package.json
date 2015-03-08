@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "gulp build && mocha",
+    "test": "mocha",
     "install": "gulp build"
   },
   "dependencies": {
