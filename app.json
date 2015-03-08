@@ -1,0 +1,7 @@
+{
+  "name": "brackets-npm-registry",
+  "description": "Install your extensions into Brackets using npm",
+  "repository": "https://github.com/zaggino/brackets-npm-registry",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": ["brackets", "npm", "extensions", "registry"]
+}
