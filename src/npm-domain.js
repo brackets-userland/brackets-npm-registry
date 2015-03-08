@@ -10,7 +10,7 @@
   let getExtensions = exports.getExtensions = function (callback) {
 
     let npmLoad = Promise.promisify(npm.load, npm);
-    npmLoad()
+    return npmLoad()
       .then(() => {
         // get all entries tagged 'brackets-extension'
         let npmSearch = Promise.promisify(npm.commands.search, npm.commands);
