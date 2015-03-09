@@ -63,7 +63,10 @@
               extensionInfos[0].downloads = body.downloads;
             } else {
               extensionInfos.forEach(extensionInfo => {
-                extensionInfo.downloads = body[extensionInfo.name].downloads;
+                let info = body[extensionInfo.name];
+                if (info && info.downloads) {
+                  extensionInfo.downloads = info.downloads;
+                }
               });
             }
 
