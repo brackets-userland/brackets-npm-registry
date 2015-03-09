@@ -5,6 +5,8 @@ var express = require('express');
 var app = express();
 var filename = path.resolve(__dirname, './tmp/registry.json');
 
+fs.writeFileSync(filename, JSON.stringify([]));
+
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/registry', function (request, response, next) {
@@ -45,8 +47,6 @@ function rebuildRegistry () {
 }
 
 setTimeout(function () {
-  fs.writeFileSync(filename, JSON.stringify([]));
-  console.log(filename, 'written');
   rebuildRegistry();
 }, 1);
 
