@@ -1,35 +1,23 @@
-parser:
-  esprima-fb
-  
+#last review done for eslint 0.16.1
+
 ecmaFeatures:
-  arrowFunctions: true
-  binaryLiterals: true
-  blockBindings: true
-  defaultParams: true
-  forOf: true
-  generators: true
-  objectLiteralComputedProperties: true
-  objectLiteralDuplicateProperties: true
-  objectLiteralShorthandMethods: true
-  objectLiteralShorthandProperties: true
-  octalLiterals: true
-  regexUFlag: true
-  regexYFlag: true
-  superInFunctions: true
-  templateStrings: true
-  unicodeCodePointEscapes: true
-  globalReturn: true
   jsx: true
   
 env:
   browser: true
+  es6: true
   node: true
+  
+globals:
+  brackets: false
+  define: false
   
 rules:
   #Possible Errors  
-  no-comma-dangle: 2 #disallow trailing commas in object literals
+  comma-dangle: [2, "never"] #disallow trailing commas
+  no-comma-dangle: 0 #deprecated as of eslint 0.16.0
   no-cond-assign: 2 #disallow assignment in conditional expressions
-  no-console: 0 #disallow use of console - use logging library instead
+  no-console: 2 #disallow use of console - use logging library instead
   no-constant-condition: 2 #disallow use of constant expressions in conditions
   no-control-regex: 2 #disallow control characters in regular expressions
   no-debugger: 2 #disallow use of debugger
@@ -87,7 +75,7 @@ rules:
   no-new-wrappers: 2 #disallows creating new instances of String,Number, and Boolean
   no-octal: 2 #disallow use of octal literals
   no-octal-escape: 2 #disallow use of octal escape sequences in string literals, such as var foo = "Copyright \251";
-  no-process-env: 0 #disallow use of process.env
+  no-process-env: 1 #disallow use of process.env
   no-proto: 2 #disallow usage of __proto__ property
   no-redeclare: 2 #disallow declaring the same variable more then once
   no-return-assign: 2 #disallow use of assignment in return statement
@@ -142,7 +130,7 @@ rules:
   no-multiple-empty-lines: 1 #disallow multiple empty lines
   no-nested-ternary: 2 #disallow nested ternary expressions
   no-new-object: 2 #disallow use of the Object constructor
-  no-space-before-semi: 1 #disallow space before semicolon
+  no-space-before-semi: 0 #deprecated as of eslint 0.16.0
   no-spaced-func: 1 #disallow space between function identifier and application
   no-ternary: 0 #disallow the use of ternary operators
   no-trailing-spaces: 1 #disallow trailing whitespace at the end of lines
@@ -154,6 +142,7 @@ rules:
   quote-props: [2, "as-needed"] #require quotes around object literal property names
   quotes: [1, "single"] #specify whether double or single quotes should be used
   semi: [2, "always"] #require or disallow use of semicolons instead of ASI
+  semi-spacing: [1, {"before": false, "after": true}] #enforce spacing before and after semicolons
   sort-vars: 0 #sort variables within the same declaration block
   space-after-function-name: 0 #deprecated
   space-after-keywords: [1, "always"] #require a space after certain keywords
@@ -166,17 +155,13 @@ rules:
   space-unary-ops: 2 #require or disallow spaces before/after unary operators (words on by default, nonwords off by default)
   spaced-line-comment: 0 #require or disallow a space immediately following the // in a line comment
   wrap-regex: 0 #require regex literals to be wrapped in parentheses
-  no-var: 0 #require let or const instead of var
+  no-var: 2 #require let or const instead of var
   generator-star: [2, "start"] #enforce the position of the * in generator functions
   
   #Legacy
   max-depth: [2, 5] #specify the maximum depth that blocks can be nested
-  max-len: [1, 100] #specify the maximum length of a line in your program
+  max-len: [1, 120] #specify the maximum length of a line in your program
   max-params: [2, 5] #limits the number of parameters that can be used in the function declaration.
   max-statements: [1, 50] #specify the maximum number of statement allowed in a function
   no-bitwise: 2 #disallow use of bitwise operators
   no-plusplus: 0 #disallow use of unary operators, ++ and --
-  
-globals:
-  brackets: false
-  define: false
