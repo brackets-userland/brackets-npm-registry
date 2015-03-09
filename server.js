@@ -3,7 +3,7 @@ var path = require('path');
 var registryBuilder = require('./dist/node/registry-builder');
 var express = require('express');
 var app = express();
-var filename = path.resolve(__dirname, 'registry.json');
+var filename = path.resolve(__dirname, './tmp/registry.json');
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -45,6 +45,8 @@ function rebuildRegistry () {
 }
 
 setTimeout(function () {
+  fs.writeFileSync(filename, JSON.stringify([]));
+  console.log(filename, 'written');
   rebuildRegistry();
 }, 1);
 
