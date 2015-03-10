@@ -9,7 +9,8 @@ define(function (require) {
 
   let init = co(function* () {
     toolbarIcon.init();
-    yield registryUtils.download();
+    let result = yield registryUtils.download();
+    console.log(result);
   });
 
   AppInit.appReady(function () {

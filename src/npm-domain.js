@@ -1,31 +1,10 @@
-(function () {
+define(function (require, exports, module) {
   'use strict';
 
-  let domainName = 'brackets-npm-registry-domain';
-  let domainManager = null;
-  let RegistryBuilder = require('./node/registry-builder');
+  let ExtensionUtils = brackets.getModule('utils/ExtensionUtils');
+  let NodeDomain = brackets.getModule('utils/NodeDomain');
+  let _domainPath = ExtensionUtils.getModulePath(module, 'node/brackets-node-domain');
+  let _nodeDomain = new NodeDomain('brackets-npm-registry-domain', _domainPath);
+  module.exports = _nodeDomain;
 
-  let getRegistry = function (callback) {
-    RegistryBuilder.buildRegistry().nodeify(callback);
-  };
-
-  exports.init = function (_domainManager) {
-    domainManager = _domainManager;
-
-    if (!domainManager.hasDomain(domainName)) {
-      domainManager.registerDomain(domainName, {major: 0, minor: 1});
-    }
-
-    domainManager.registerCommand(
-      domainName,
-      'getRegistry', // command name
-      getRegistry, // handler function
-      true, // is async
-      'get a list of extensions from npm', // description
-      [
-        {name: 'extensions', type: 'array'}
-      ]
-    );
-  };
-
-}());
+});
