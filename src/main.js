@@ -3,30 +3,17 @@ define(function (require) {
 
   let AppInit = brackets.getModule('utils/AppInit');
   let co = require('bluebird').coroutine;
+  let toolbarIcon = require('./ui/toolbar-icon');
   let Logger = require('./utils/Logger');
-  let SUCCESS = Symbol();
+  let registryUtils = require('./ui/registry-utils');
 
-  function promiseResponse() {
-    return new Promise(function (resolve) {
-      setTimeout(function () {
-        resolve(SUCCESS);
-      }, 1);
-    });
-  }
-
-  let tryGenerators = co(function* () {
-    let response = yield promiseResponse();
-    if (response === SUCCESS) {
-      Logger.log('Hello world!');
-    } else {
-      throw new Error('Response has unexpected value: ' + response);
-    }
+  let init = co(function* () {
+    toolbarIcon.init();
+    yield registryUtils.download();
   });
 
   AppInit.appReady(function () {
-    // co functions return promises
-    tryGenerators()
-      .catch(e => Logger.error(e));
+    init().catch(e => Logger.error(e));
   });
 
 });

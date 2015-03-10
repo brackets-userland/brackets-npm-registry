@@ -1,4 +1,4 @@
-/*eslint strict: [2, "global"]*/
+/*eslint strict: [2, "global"], no-var: 0*/
 
 'use strict';
 
@@ -18,7 +18,7 @@ var DIST_DIR = './dist/';
 // options for transpiling es6 to es5
 var babelOptions = {
   // generators are available in Brackets' shell and also break sourcemaps
-  blacklist: ['regenerator']
+  blacklist: ['regenerator', 'strict']
 };
 
 // provides pipe to log stuff to console when certain task finishes
@@ -32,8 +32,8 @@ function logPipe(str) {
 }
 
 // prevents watch from crashing on errors
-function swallowError (error) {
-  console.log(error.toString());
+function swallowError(error) {
+  gutil.log(gutil.colors.red(error.toString()));
   this.emit('end');
 }
 

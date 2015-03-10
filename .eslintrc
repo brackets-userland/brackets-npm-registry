@@ -11,6 +11,7 @@ env:
 globals:
   brackets: false
   define: false
+  $: false
   
 rules:
   #Possible Errors  
