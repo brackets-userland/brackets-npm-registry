@@ -1,5 +1,6 @@
 {
-    "paths": {
-        "bluebird": "./node_modules/bluebird/js/browser/bluebird.min"
-    }
+  "paths": {
+    "bluebird": "./node_modules/bluebird/js/browser/bluebird.min",
+    "react": "./node_modules/react/dist/react.min"
+  }
 }

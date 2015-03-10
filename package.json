@@ -37,6 +37,7 @@
     "gulp-sourcemaps": "1.5.0",
     "gulp-util": "3.0.4",
     "npm": "2.7.0",
+    "react": "^0.12.2",
     "request": "2.53.0",
     "through2": "0.6.3"
   },
