@@ -20,6 +20,11 @@ define(function (require, exports) {
       });
   };
 
+  let getRegistry = function () {
+    return downloadedData;
+  };
+
   exports.download = download;
+  exports.getRegistry = getRegistry;
 
 });
