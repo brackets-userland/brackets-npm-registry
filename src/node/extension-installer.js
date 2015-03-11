@@ -8,15 +8,15 @@
   let fs = require('fs-extra');
   let path = require('path');
 
-  exports.install = function (targetPath, name) {
+  exports.install = function (targetPath, npmPackageName) {
 
-    let npmInstallFolder = path.resolve(targetPath, 'node_modules', name);
-    let finalInstallFolder = path.resolve(targetPath, name);
+    let npmInstallFolder = path.resolve(targetPath, 'node_modules', npmPackageName);
+    let finalInstallFolder = path.resolve(targetPath, npmPackageName);
 
     return fromNode(npm.load.bind(npm))
       .then(() => {
         // npm is loaded, we can start the installation
-        return fromNode(npm.commands.install.bind(npm.commands, targetPath, name));
+        return fromNode(npm.commands.install.bind(npm.commands, targetPath, npmPackageName));
       })
       .then(() => {
         // installation successful, we can create the target directory
@@ -44,6 +44,9 @@
                                        path.resolve(npmInstallFolder, entry),
                                        path.resolve(finalInstallFolder, entry)));
         }));
+      })
+      .then(() => {
+        return `successfully installed ${npmPackageName}`;
       })
       .finally(() => {
         // all done, now just remove the node_modules temp directory
