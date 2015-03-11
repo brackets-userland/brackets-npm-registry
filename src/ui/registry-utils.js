@@ -20,11 +20,24 @@ define(function (require, exports) {
       });
   };
 
+  let install = function (extensionName) {
+    let targetFolder = brackets.app.getApplicationSupportDirectory() + '/extensions/user';
+    Logger.log(`installing ${extensionName} into ${targetFolder}`);
+    Promise.resolve(NpmDomain.exec('installExtension', targetFolder, extensionName))
+      .then(result => {
+        Logger.log(result);
+      })
+      .catch(err => {
+        Logger.error(err);
+      });
+  };
+
   let getRegistry = function () {
     return downloadedData;
   };
 
   exports.download = download;
   exports.getRegistry = getRegistry;
+  exports.install = install;
 
 });

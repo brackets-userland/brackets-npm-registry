@@ -4,9 +4,14 @@
   let domainName = 'brackets-npm-registry-domain';
   let domainManager = null;
   let RegistryBuilder = require('./registry-builder');
+  let ExtensionInstaller = require('./extension-installer');
 
   let buildRegistry = function (callback) {
     RegistryBuilder.buildRegistry().nodeify(callback);
+  };
+
+  let installExtension = function (targetPath, name, callback) {
+    ExtensionInstaller.install(targetPath, name).nodeify(callback);
   };
 
   exports.init = function (_domainManager) {
@@ -26,6 +31,20 @@
         {name: 'extensions', type: 'array'}
       ]
     );
+
+    domainManager.registerCommand(
+      domainName,
+      'installExtension',
+      installExtension,
+      true,
+      'installs an extension into a given path',
+      [
+        {name: 'targetPath', type: 'string'},
+        {name: 'extensionName', type: 'string'},
+        {name: 'installLog', type: 'string'}
+      ]
+    );
+
   };
 
 }());

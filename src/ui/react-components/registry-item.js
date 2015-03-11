@@ -4,7 +4,7 @@ define(function (require, exports, module) {
   let NativeApp = brackets.getModule('utils/NativeApp');
   let React = require('react');
   let Strings = require('strings');
-  let Logger = require('../../utils/Logger');
+  let registryUtils = require('../registry-utils');
 
   let formatDate = function (val) {
     return val.substring(0, 10);
@@ -13,7 +13,7 @@ define(function (require, exports, module) {
   module.exports = React.createClass({
 
     handleInstall: function () {
-      Logger.log('click(): install ' + this.props.registryInfo.name);
+      registryUtils.install(this.props.registryInfo.name);
     },
 
     showAuthor: function () {

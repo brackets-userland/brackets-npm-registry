@@ -10,7 +10,8 @@ define(function (require) {
   let init = co(function* () {
     toolbarIcon.init();
     let result = yield registryUtils.download();
-    console.log(result);
+    // TODO: check if there're any updates available
+    Logger.log(result);
   });
 
   AppInit.appReady(function () {
