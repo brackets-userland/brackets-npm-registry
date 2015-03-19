@@ -79,3 +79,8 @@
   };
 
 }());
+
+if (process.argv[1] === __filename) {
+  exports.buildRegistry(...process.argv.slice(2));
+}
+
