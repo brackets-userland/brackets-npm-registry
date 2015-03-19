@@ -24,7 +24,7 @@
     RegistryBuilder.buildRegistry().nodeify(callback);
   };
 
-  const installExtension = function (targetPath, name, callback) {
+  const installExtension = function (targetPath, name, callback, progressCallback) {
 
     let args = ['extension-installer.js', targetPath, name];
 
@@ -39,6 +39,7 @@
     });
 
     child.stderr.on('data', function (data) {
+      if (progressCallback) { progressCallback(helpers.join(data)); }
       stderr[stderr.length] = data;
     });
 

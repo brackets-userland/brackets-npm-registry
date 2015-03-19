@@ -23,7 +23,12 @@ define(function (require, exports) {
   let install = function (extensionName) {
     let targetFolder = brackets.app.getApplicationSupportDirectory() + '/extensions/user';
     Logger.log(`installing ${extensionName} into ${targetFolder}`);
-    Promise.resolve(NpmDomain.exec('installExtension', targetFolder, extensionName))
+    Promise.resolve(
+      NpmDomain.exec('installExtension', targetFolder, extensionName)
+        .progress(msg => {
+          Logger.log(`progress => ${msg}`);
+        })
+    )
       .then(result => {
         Logger.log(`${extensionName} successfully installed:`);
         Logger.log(result);
