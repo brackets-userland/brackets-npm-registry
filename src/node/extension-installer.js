@@ -56,3 +56,7 @@
   };
 
 }());
+
+if (process.argv[1] === __filename) {
+  exports.install(...process.argv.slice(2));
+}
