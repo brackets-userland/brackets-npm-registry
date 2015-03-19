@@ -31,16 +31,18 @@
     "bluebird": "2.9.13",
     "eslint": "0.16.1",
     "express": "4.12.2",
-    "fs-extra": "^0.16.5",
+    "fs-extra": "0.16.5",
     "gulp": "3.8.11",
     "gulp-babel": "4.0.0",
     "gulp-eslint": "0.6.0",
     "gulp-sourcemaps": "1.5.0",
     "gulp-util": "3.0.4",
+    "lodash": "3.5.0",
     "npm": "2.7.0",
-    "react": "^0.12.2",
+    "react": "0.12.2",
     "request": "2.53.0",
-    "through2": "0.6.3"
+    "through2": "0.6.3",
+    "which": "1.0.9"
   },
   "devDependencies": {
     "chai": "2.1.1",

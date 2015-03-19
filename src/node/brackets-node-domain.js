@@ -1,17 +1,62 @@
+/*eslint no-console:0,no-undefined:0*/
 (function () {
   'use strict';
 
-  let domainName = 'brackets-npm-registry-domain';
+  const _ = require('lodash');
+  const spawn = require('child_process').spawn;
+  const which = require('which');
+  const helpers = require('./domain-helpers');
+  const RegistryBuilder = require('./registry-builder');
+  const domainName = 'brackets-npm-registry-domain';
   let domainManager = null;
-  let RegistryBuilder = require('./registry-builder');
-  let ExtensionInstaller = require('./extension-installer');
 
-  let buildRegistry = function (callback) {
+  // find a path to node
+  const nodePath = _.find([
+    '/usr/local/bin/node'
+  ], path => which.sync(path));
+
+  if (!nodePath) {
+    console.error('[brackets-npm-registry] cant find node executable!');
+  }
+
+  const buildRegistry = function (callback) {
+    // TODO: delegate this to spawn, so memory is properly released after it finishes
     RegistryBuilder.buildRegistry().nodeify(callback);
   };
 
-  let installExtension = function (targetPath, name, callback) {
-    ExtensionInstaller.install(targetPath, name).nodeify(callback);
+  const installExtension = function (targetPath, name, callback) {
+
+    let args = ['extension-installer.js', targetPath, name];
+
+    let child = spawn(nodePath, args, {
+      cwd: __dirname
+    });
+
+    let exitCode, stdout = [], stderr = [];
+
+    child.stdout.on('data', function (data) {
+      stdout[stdout.length] = data;
+    });
+
+    child.stderr.on('data', function (data) {
+      stderr[stderr.length] = data;
+    });
+
+    child.on('error', function (err) {
+      callback(err.stack, undefined);
+    });
+
+    child.on('exit', function (code) {
+      exitCode = code;
+    });
+
+    child.on('close', function () {
+      callback(exitCode > 0 ? helpers.join(stderr) : undefined,
+               exitCode > 0 ? undefined : helpers.join(stdout));
+    });
+
+    child.stdin.end();
+
   };
 
   exports.init = function (_domainManager) {

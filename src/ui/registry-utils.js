@@ -25,9 +25,11 @@ define(function (require, exports) {
     Logger.log(`installing ${extensionName} into ${targetFolder}`);
     Promise.resolve(NpmDomain.exec('installExtension', targetFolder, extensionName))
       .then(result => {
+        Logger.log(`${extensionName} successfully installed:`);
         Logger.log(result);
       })
       .catch(err => {
+        Logger.log(`${extensionName} failed to install:`);
         Logger.error(err);
       });
   };
