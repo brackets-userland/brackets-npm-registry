@@ -3,9 +3,8 @@
   'use strict';
 
   const _ = require('lodash');
-  const spawn = require('child_process').spawn;
   const which = require('which');
-  const helpers = require('./domain-helpers');
+  const buffspawn = require('buffered-spawn');
   const RegistryBuilder = require('./registry-builder');
   const domainName = 'brackets-npm-registry-domain';
   let domainManager = null;
@@ -28,35 +27,15 @@
 
     let args = ['extension-installer.js', targetPath, name];
 
-    let child = spawn(nodePath, args, {
+    buffspawn(nodePath, args, {
       cwd: __dirname
+    }).progress(function (buff) {
+      if (progressCallback) { progressCallback(buff.toString()); }
+    }).spread(function (stdout) {
+      callback(undefined, stdout);
+    }, function (err) {
+      callback(err);
     });
-
-    let exitCode, stdout = [], stderr = [];
-
-    child.stdout.on('data', function (data) {
-      stdout[stdout.length] = data;
-    });
-
-    child.stderr.on('data', function (data) {
-      if (progressCallback) { progressCallback(helpers.join(data)); }
-      stderr[stderr.length] = data;
-    });
-
-    child.on('error', function (err) {
-      callback(err.stack, undefined);
-    });
-
-    child.on('exit', function (code) {
-      exitCode = code;
-    });
-
-    child.on('close', function () {
-      callback(exitCode > 0 ? helpers.join(stderr) : undefined,
-               exitCode > 0 ? undefined : helpers.join(stdout));
-    });
-
-    child.stdin.end();
 
   };
 

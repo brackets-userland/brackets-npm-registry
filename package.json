@@ -29,6 +29,7 @@
   "dependencies": {
     "babel-core": "4.7.3",
     "bluebird": "2.9.13",
+    "buffered-spawn": "1.0.1",
     "eslint": "0.16.1",
     "express": "4.12.2",
     "fs-extra": "0.16.5",

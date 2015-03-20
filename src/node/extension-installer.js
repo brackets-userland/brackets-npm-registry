@@ -7,6 +7,8 @@
   let fromNode = Promise.fromNode;
   let fs = require('fs-extra');
   let path = require('path');
+  let { log } = console;
+  let own_process = false;
 
   exports.install = function (targetPath, npmPackageName) {
 
@@ -16,10 +18,11 @@
     return fromNode(npm.load.bind(npm))
       .then(() => {
         // npm is loaded, we can start the installation
+        log(`npm install ${targetPath} ${npmPackageName}`);
         return fromNode(npm.commands.install.bind(npm.commands, targetPath, npmPackageName));
       })
       .then(() => {
-        // installation successful, we can create the target directory
+        log('installation successful, creating the target directory');
         return fromNode(fs.ensureDir.bind(fs, finalInstallFolder));
       })
       .then(() => {
@@ -27,7 +30,7 @@
         return fromNode(fs.readdir.bind(fs, finalInstallFolder));
       })
       .then(dirContents => {
-        // delete everything except .git
+        log('clearing target directory');
         return all(dirContents.map(entry => {
           if (entry === '.git') { return null; }
           return fromNode(fs.remove.bind(fs, path.resolve(finalInstallFolder, entry)));
@@ -38,7 +41,7 @@
         return fromNode(fs.readdir.bind(fs, npmInstallFolder));
       })
       .then(dirContents => {
-        // move everything to the final folder
+        log('moving files to target directory');
         return all(dirContents.map(entry => {
           return fromNode(fs.move.bind(fs,
                                        path.resolve(npmInstallFolder, entry),
@@ -51,12 +54,19 @@
       .finally(() => {
         // all done, now just remove the node_modules temp directory
         return fromNode(fs.remove.bind(fs, path.resolve(targetPath, 'node_modules')));
+      })
+      .catch(err => {
+        log(err);
+        if (own_process) {
+          process.exit(1);
+        }
       });
 
   };
 
-}());
+  if (process.argv[1] === __filename) {
+    own_process = true;
+    exports.install(...process.argv.slice(2));
+  }
 
-if (process.argv[1] === __filename) {
-  exports.install(...process.argv.slice(2));
-}
+}());
