@@ -2,24 +2,70 @@
 (function () {
   'use strict';
 
-  const _ = require('lodash');
-  const which = require('which');
+  const Bluebird = require('bluebird');
+  const which = Bluebird.promisify(require('which'));
   const buffspawn = require('buffered-spawn');
   const RegistryBuilder = require('./registry-builder');
   const domainName = 'brackets-npm-registry-domain';
-  let domainManager = null;
-
-  // find a path to node
-  const nodePath = _.find([
+  const log = function (...args) { console.log(`[${domainName}]\n`, ...args); };
+  const commonNodeLocations = process.platform === 'win32' ? [
+    // TODO: windows paths
+  ] : [
+    '/usr/bin/iojs',
+    '/usr/bin/node',
+    '/usr/local/bin/iojs',
     '/usr/local/bin/node'
-  ], path => which.sync(path));
+  ];
+  let domainManager = null;
+  let nodeIsInPath = false;
+  let nodePath = null;
+  let initFinished = false;
 
-  if (!nodePath) {
-    console.error('[brackets-npm-registry] cant find node executable!');
-  }
+  const foundNodeAt = function (path) {
+    log('found node at:\n', path);
+  };
+
+  const lookForNodeElsewhere = function () {
+    log('looking for node in common locations:\n', commonNodeLocations.join(', '));
+    // FUTURE: maybe check if stdout is a valid node version?
+    Bluebird.any(commonNodeLocations.map(
+      path => which(path).then(
+      path => buffspawn(path, ['--version']).spread(
+      (/*stdout, stderr*/) => path))
+    )).then(path => {
+      foundNodeAt(path);
+    }).catch(errs => {
+      // .any returns errs array
+      errs.forEach(err => {
+        log('failed to find node in common locations:\n', err.name, ':', err.message);
+      });
+    });
+  };
+
+  const lookForNodeInPath = function () {
+    which('node')
+      .then(cmd => {
+        if (!cmd) {
+          log('couldnt find node in system path');
+          lookForNodeElsewhere();
+          return;
+        }
+        // all good as it should be
+        nodeIsInPath = true;
+        nodePath = cmd;
+        initFinished = true;
+      })
+      .catch(err => {
+        log('error looking for node in system path:\n', err.name, ':', err.message);
+        lookForNodeElsewhere();
+      });
+  };
+
+  // init the domain internals
+  lookForNodeInPath();
 
   const buildRegistry = function (callback) {
-    // TODO: delegate this to spawn, so memory is properly released after it finishes
+    // TODO: delegate this to buffspawn, so memory is properly released after it finishes
     RegistryBuilder.buildRegistry().nodeify(callback);
   };
 
