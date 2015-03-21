@@ -1,27 +1,28 @@
-/*eslint strict:0*/
+/*eslint strict:0, no-console:0*/
 'use strict';
 
 const npm = require('npm');
 const { all, fromNode } = require('bluebird');
 const fs = require('fs-extra');
 const path = require('path');
-const { log } = console;
+const logOutput = function (...args) { console.log(...args); };
+const logProgress = function (...args) { console.error(...args); };
 
 function install(targetPath, npmPackageName) {
 
   const npmInstallFolder = path.resolve(targetPath, 'node_modules', npmPackageName);
   const finalInstallFolder = path.resolve(targetPath, npmPackageName);
 
-  log('loading npm');
+  logProgress('loading npm');
   return fromNode(npm.load.bind(npm))
     .then(() => {
       // npm is loaded, we can start the installation
-      log(`executing npm install ${targetPath} ${npmPackageName}`);
+      logProgress(`executing npm install ${targetPath} ${npmPackageName}`);
       return fromNode(npm.commands.install.bind(npm.commands, targetPath, npmPackageName));
     })
     .then(() => {
-      log('installation successful into directory:\n', npmInstallFolder);
-      log('ensuring the target directory exists:\n', finalInstallFolder);
+      logProgress('installation successful into directory:\n', npmInstallFolder);
+      logProgress('ensuring the target directory exists:\n', finalInstallFolder);
       return fromNode(fs.ensureDir.bind(fs, finalInstallFolder));
     })
     .then(() => {
@@ -29,7 +30,7 @@ function install(targetPath, npmPackageName) {
       return fromNode(fs.readdir.bind(fs, finalInstallFolder));
     })
     .then(dirContents => {
-      log('clearing the directory:\n', finalInstallFolder);
+      logProgress('clearing the directory:\n', finalInstallFolder);
       return all(dirContents.map(entry => {
         if (entry === '.git') { return null; }
         return fromNode(fs.remove.bind(fs, path.resolve(finalInstallFolder, entry)));
@@ -40,7 +41,7 @@ function install(targetPath, npmPackageName) {
       return fromNode(fs.readdir.bind(fs, npmInstallFolder));
     })
     .then(dirContents => {
-      log('moving files from:\n', npmInstallFolder, '\ninto:\n', finalInstallFolder);
+      logProgress('moving files from:\n', npmInstallFolder, '\ninto:\n', finalInstallFolder);
       return all(dirContents.map(entry => {
         return fromNode(fs.move.bind(fs,
                                      path.resolve(npmInstallFolder, entry),
@@ -48,10 +49,10 @@ function install(targetPath, npmPackageName) {
       }));
     })
     .then(() => {
-      log(`successfully installed ${npmPackageName}`);
+      logOutput(`successfully installed ${npmPackageName}`);
     })
     .catch(err => {
-      log(err);
+      logProgress(err);
       throw err;
     })
     .finally(() => {

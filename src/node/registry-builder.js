@@ -1,4 +1,4 @@
-/*eslint strict:0*/
+/*eslint strict:0, no-console:0*/
 'use strict';
 
 const npm = require('npm');
@@ -6,21 +6,22 @@ const Promise = require('bluebird');
 const { all, fromNode, promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs'));
 const request = require('request');
-const { log } = console;
+const logOutput = function (...args) { console.log(...args); };
+const logProgress = function (...args) { console.error(...args); };
 
 function buildRegistry(targetFile) {
 
-  log('loading npm');
+  logProgress('loading npm');
   return fromNode(npm.load.bind(npm))
     .then(() => {
       // npm is loaded, we can start the search
       // get all entries tagged 'brackets-extension'
-      log(`executing npm search brackets-extension`);
+      logProgress(`executing npm search brackets-extension`);
       return fromNode(npm.commands.search.bind(npm.commands, ['brackets-extension']));
     })
     .then(searchResults => {
       // call view for all potential extensions
-      log(`executing npm view to get detailed info about the extensions`);
+      logProgress(`executing npm view to get detailed info about the extensions`);
       let npmView = promisify(npm.commands.view, npm.commands);
       return all(Object.keys(searchResults).map(
         extensionId =>
@@ -30,12 +31,12 @@ function buildRegistry(targetFile) {
       ));
     })
     .then(viewResults => {
-      log(`got all view results`);
+      logProgress(`got all view results`);
       // filter out those, which doesn't have brackets engine specified
       return viewResults.filter(result => result.engines && result.engines.brackets);
     })
     .then(extensionInfos => {
-      log(`getting download info counts for the extensions`);
+      logProgress(`getting download info counts for the extensions`);
       // get download counts for the extensions
       let extensionIds = extensionInfos.map(i => i.name);
       let from = '2015-01-01';
@@ -77,12 +78,14 @@ function buildRegistry(targetFile) {
       });
     })
     .then(extensionInfos => {
-      log(`all done`);
+      let strResults = JSON.stringify(extensionInfos, null, 2);
+      logProgress(`all done`);
       if (targetFile) {
-        log(`writing the results to file:\n`, targetFile);
-        return fs.writeFileAsync(targetFile, JSON.stringify(extensionInfos, null, 2))
+        logProgress(`writing the results to file:\n`, targetFile);
+        return fs.writeFileAsync(targetFile, strResults)
           .then(() => extensionInfos);
       }
+      logOutput(strResults);
       return extensionInfos;
     });
 

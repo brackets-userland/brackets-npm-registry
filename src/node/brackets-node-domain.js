@@ -2,100 +2,42 @@
 (function () {
   'use strict';
 
-  const { any, promisify } = require('bluebird');
-  const which = promisify(require('which'));
-  const buffspawn = require('buffered-spawn');
-  const RegistryBuilder = require('./registry-builder');
   const domainName = 'brackets-npm-registry-domain';
-  const log = function (...args) { console.log(`[${domainName}]\n`, ...args); };
-  const commonNodeLocations = process.platform === 'win32' ? [
-    // TODO: windows paths
-  ] : [
-    '/usr/bin/node',
-    '/usr/local/bin/node'
-  ];
+  const buffspawn = require('buffered-spawn');
+  const nodeLookup = require('./node-lookup');
+  const logger = function (...args) { console.log(`[${domainName}]\n`, ...args); };
   let domainManager = null;
-  let nodeIsInPath = false;
-  let nodePath = null;
-  let initFinished = false;
 
-  const foundNodeAt = function (path) {
-    log('found node at:\n', path);
-    nodePath = path;
-    initFinished = true;
-  };
+  const buildRegistry = function (callback, progressCallback) {
+    nodeLookup(logger).then(nodePath => {
 
-  const lookForNodeElsewhere = function () {
-    log('looking for node in common locations:\n', commonNodeLocations.join(', '));
-    // FUTURE: maybe check if stdout is a valid node version?
-    any(commonNodeLocations.map(
-      path => which(path).then(
-      path => buffspawn(path, ['--version']).spread(
-      (/*stdout, stderr*/) => path))
-    )).then(path => {
-      foundNodeAt(path);
-    }).catch(errs => {
-      // .any returns errs array
-      errs.forEach(err => {
-        log('failed to find node in common locations:\n', err.name, ':', err.message);
+      let args = ['registry-builder.js'];
+
+      return buffspawn(nodePath, args, {
+        cwd: __dirname
+      }).progress(function (buff) {
+        if (progressCallback) { progressCallback(buff.toString()); }
+      }).spread(function (stdout) {
+        callback(undefined, stdout);
       });
-    });
-  };
 
-  const lookForNodeInPath = function () {
-    which('node')
-      .then(cmd => {
-        if (!cmd) {
-          log('couldnt find node in system path');
-          lookForNodeElsewhere();
-          return;
-        }
-        // all good as it should be
-        nodeIsInPath = true;
-        nodePath = cmd;
-        initFinished = true;
-      })
-      .catch(err => {
-        log('error looking for node in system path:\n', err.name, ':', err.message);
-        lookForNodeElsewhere();
-      });
-  };
-
-  // init the domain internals
-  lookForNodeInPath();
-
-  const buildRegistry = function (callback) {
-    // TODO: delegate this to buffspawn, so memory is properly released after it finishes
-    RegistryBuilder.buildRegistry().nodeify(callback);
+    }).catch(err => callback(err));
   };
 
   const installExtension = function (targetPath, name, callback, progressCallback) {
+    nodeLookup(logger).then(nodePath => {
 
-    if (!initFinished) {
-      return callback(new Error(`extension init hasn't finished yet!`));
-    }
+      let args = ['extension-installer.js', targetPath, name];
 
-    let args = ['extension-installer.js', targetPath, name];
+      return buffspawn(nodePath, args, {
+        cwd: __dirname
+      }).progress(function (buff) {
+        if (progressCallback) { progressCallback(buff.toString()); }
+      }).spread(function (stdout) {
+        callback(undefined, stdout);
+      });
 
-    let env = process.env;
-    if (!nodeIsInPath) {
-      // TODO: fix nodePath into the parent dir path
-      // TODO: different join char for win32
-      env.PATH = ['/usr/local/bin', env.PATH].join(':');
-    }
-
-    // TODO: what if nodePath is null?
-    buffspawn(nodePath, args, {
-      cwd: __dirname,
-      env
-    }).progress(function (buff) {
-      if (progressCallback) { progressCallback(buff.toString()); }
-    }).spread(function (stdout) {
-      callback(undefined, stdout);
-    }, function (err) {
-      callback(err);
-    });
-
+    }).catch(err => callback(err));
   };
 
   exports.init = function (_domainManager) {
