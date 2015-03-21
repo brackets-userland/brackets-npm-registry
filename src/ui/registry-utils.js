@@ -30,12 +30,10 @@ define(function (require, exports) {
         })
     )
       .then(result => {
-        Logger.log(`${extensionName} successfully installed:`);
-        Logger.log(result);
+        Logger.log(`${extensionName} successfully installed`);
       })
       .catch(err => {
-        Logger.log(`${extensionName} failed to install:`);
-        Logger.error(err);
+        Logger.log(`${extensionName} failed to install`);
       });
   };
 

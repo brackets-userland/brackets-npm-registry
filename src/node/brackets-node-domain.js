@@ -11,9 +11,7 @@
   const commonNodeLocations = process.platform === 'win32' ? [
     // TODO: windows paths
   ] : [
-    '/usr/bin/iojs',
     '/usr/bin/node',
-    '/usr/local/bin/iojs',
     '/usr/local/bin/node'
   ];
   let domainManager = null;
@@ -23,6 +21,8 @@
 
   const foundNodeAt = function (path) {
     log('found node at:\n', path);
+    nodePath = path;
+    initFinished = true;
   };
 
   const lookForNodeElsewhere = function () {
@@ -73,8 +73,14 @@
 
     let args = ['extension-installer.js', targetPath, name];
 
+    let env = process.env;
+    // TODO: fix nodePath into the parent dir path
+    env.PATH = ['/usr/local/bin', env.PATH].join(':');
+
+    // TODO: what if nodePath is null?
     buffspawn(nodePath, args, {
-      cwd: __dirname
+      cwd: __dirname,
+      env
     }).progress(function (buff) {
       if (progressCallback) { progressCallback(buff.toString()); }
     }).spread(function (stdout) {

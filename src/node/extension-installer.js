@@ -15,14 +15,16 @@
     let npmInstallFolder = path.resolve(targetPath, 'node_modules', npmPackageName);
     let finalInstallFolder = path.resolve(targetPath, npmPackageName);
 
+    log('loading npm');
     return fromNode(npm.load.bind(npm))
       .then(() => {
         // npm is loaded, we can start the installation
-        log(`npm install ${targetPath} ${npmPackageName}`);
+        log(`executing npm install ${targetPath} ${npmPackageName}`);
         return fromNode(npm.commands.install.bind(npm.commands, targetPath, npmPackageName));
       })
       .then(() => {
-        log('installation successful, creating the target directory');
+        log('installation successful into directory:\n', npmInstallFolder);
+        log('ensuring the target directory exists:\n', finalInstallFolder);
         return fromNode(fs.ensureDir.bind(fs, finalInstallFolder));
       })
       .then(() => {
@@ -30,7 +32,7 @@
         return fromNode(fs.readdir.bind(fs, finalInstallFolder));
       })
       .then(dirContents => {
-        log('clearing target directory');
+        log('clearing the directory:\n', finalInstallFolder);
         return all(dirContents.map(entry => {
           if (entry === '.git') { return null; }
           return fromNode(fs.remove.bind(fs, path.resolve(finalInstallFolder, entry)));
@@ -41,7 +43,7 @@
         return fromNode(fs.readdir.bind(fs, npmInstallFolder));
       })
       .then(dirContents => {
-        log('moving files to target directory');
+        log('moving files from:\n', npmInstallFolder, '\ninto:\n', finalInstallFolder);
         return all(dirContents.map(entry => {
           return fromNode(fs.move.bind(fs,
                                        path.resolve(npmInstallFolder, entry),
@@ -49,7 +51,7 @@
         }));
       })
       .then(() => {
-        return `successfully installed ${npmPackageName}`;
+        log(`successfully installed ${npmPackageName}`);
       })
       .finally(() => {
         // all done, now just remove the node_modules temp directory
