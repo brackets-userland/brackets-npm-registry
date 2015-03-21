@@ -1,9 +1,9 @@
-/*eslint no-console:0,no-undefined:0*/
+/*eslint no-console:0,no-undefined:0,no-process-env:0*/
 (function () {
   'use strict';
 
-  const Bluebird = require('bluebird');
-  const which = Bluebird.promisify(require('which'));
+  const { any, promisify } = require('bluebird');
+  const which = promisify(require('which'));
   const buffspawn = require('buffered-spawn');
   const RegistryBuilder = require('./registry-builder');
   const domainName = 'brackets-npm-registry-domain';
@@ -28,7 +28,7 @@
   const lookForNodeElsewhere = function () {
     log('looking for node in common locations:\n', commonNodeLocations.join(', '));
     // FUTURE: maybe check if stdout is a valid node version?
-    Bluebird.any(commonNodeLocations.map(
+    any(commonNodeLocations.map(
       path => which(path).then(
       path => buffspawn(path, ['--version']).spread(
       (/*stdout, stderr*/) => path))
@@ -71,11 +71,18 @@
 
   const installExtension = function (targetPath, name, callback, progressCallback) {
 
+    if (!initFinished) {
+      return callback(new Error(`extension init hasn't finished yet!`));
+    }
+
     let args = ['extension-installer.js', targetPath, name];
 
     let env = process.env;
-    // TODO: fix nodePath into the parent dir path
-    env.PATH = ['/usr/local/bin', env.PATH].join(':');
+    if (!nodeIsInPath) {
+      // TODO: fix nodePath into the parent dir path
+      // TODO: different join char for win32
+      env.PATH = ['/usr/local/bin', env.PATH].join(':');
+    }
 
     // TODO: what if nodePath is null?
     buffspawn(nodePath, args, {
