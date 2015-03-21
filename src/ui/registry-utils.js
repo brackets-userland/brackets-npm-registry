@@ -12,9 +12,14 @@ define(function (require, exports) {
       .catch(function (err) {
         Logger.error(err);
         // error downloading? we try to build our own
-        return Promise.resolve(NpmDomain.exec('buildRegistry'));
+        return Promise.resolve(NpmDomain.exec('buildRegistry')
+          // TODO: only log progress in DEBUG mode
+          .progress(msg => Logger.log(`buildRegistry progress => ${msg}`)));
       })
       .then(function (response) {
+        if (typeof response === 'string') {
+          response = JSON.parse(response);
+        }
         downloadedData = response;
         return response;
       });
@@ -29,11 +34,11 @@ define(function (require, exports) {
           Logger.log(`progress => ${msg}`);
         })
     )
-      .then(result => {
+      .then(() => {
         Logger.log(`${extensionName} successfully installed`);
       })
       .catch(err => {
-        Logger.log(`${extensionName} failed to install`);
+        Logger.log(`${extensionName} failed to install:\n`, err.name, `:`, err.message);
       });
   };
 

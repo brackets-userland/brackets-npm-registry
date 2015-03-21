@@ -17,7 +17,7 @@ function buildRegistry(targetFile) {
       // npm is loaded, we can start the search
       // get all entries tagged 'brackets-extension'
       logProgress(`executing npm search brackets-extension`);
-      return fromNode(npm.commands.search.bind(npm.commands, ['brackets-extension']));
+      return fromNode(npm.commands.search.bind(npm.commands, ['brackets-extension'], true));
     })
     .then(searchResults => {
       // call view for all potential extensions
