@@ -3,39 +3,39 @@
 
 const npm = require('npm');
 const Promise = require('bluebird');
+const { all, fromNode, promisify, promisifyAll } = require('bluebird');
+const fs = promisifyAll(require('fs'));
 const request = require('request');
+const { log } = console;
 
-function buildRegistry() {
+function buildRegistry(targetFile) {
 
-  let npmLoad = Promise.promisify(npm.load, npm);
-  return npmLoad()
+  log('loading npm');
+  return fromNode(npm.load.bind(npm))
     .then(() => {
-
+      // npm is loaded, we can start the search
       // get all entries tagged 'brackets-extension'
-      let npmSearch = Promise.promisify(npm.commands.search, npm.commands);
-      return npmSearch(['brackets-extension'], true);
-
+      log(`executing npm search brackets-extension`);
+      return fromNode(npm.commands.search.bind(npm.commands, ['brackets-extension']));
     })
     .then(searchResults => {
-
       // call view for all potential extensions
-      let npmView = Promise.promisify(npm.commands.view, npm.commands);
-      return Promise.all(Object.keys(searchResults).map(
+      log(`executing npm view to get detailed info about the extensions`);
+      let npmView = promisify(npm.commands.view, npm.commands);
+      return all(Object.keys(searchResults).map(
         extensionId =>
           npmView([extensionId + '@latest'], true).then(result =>
             result[Object.keys(result)[0]]
           )
       ));
-
     })
     .then(viewResults => {
-
+      log(`got all view results`);
       // filter out those, which doesn't have brackets engine specified
       return viewResults.filter(result => result.engines && result.engines.brackets);
-
     })
     .then(extensionInfos => {
-
+      log(`getting download info counts for the extensions`);
       // get download counts for the extensions
       let extensionIds = extensionInfos.map(i => i.name);
       let from = '2015-01-01';
@@ -75,6 +75,15 @@ function buildRegistry() {
 
         });
       });
+    })
+    .then(extensionInfos => {
+      log(`all done`);
+      if (targetFile) {
+        log(`writing the results to file:\n`, targetFile);
+        return fs.writeFileAsync(targetFile, JSON.stringify(extensionInfos, null, 2))
+          .then(() => extensionInfos);
+      }
+      return extensionInfos;
     });
 
 }
