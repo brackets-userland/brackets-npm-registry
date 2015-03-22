@@ -15,11 +15,15 @@ var MAIN_FILES = './*.js';
 var SRC_FILES = './src/**/*.js';
 var DIST_DIR = './dist/';
 
+var isMac = process.platform === 'darwin';
+var isWin = process.platform === 'win32';
+
 // options for transpiling es6 to es5
-var babelOptions = {
+// we need to check OS here because Linux doesn't have CEF with generators
+var babelOptions = isMac || isWin ? {
   // generators are available in Brackets' shell and also break sourcemaps
   blacklist: ['regenerator', 'strict']
-};
+} : {};
 
 // provides pipe to log stuff to console when certain task finishes
 function logPipe(str) {
