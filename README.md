@@ -24,7 +24,7 @@ npm install
 ### linux - not tested yet
 
 ```
-cd ???
+cd ~/.config/Brackets/extensions/user
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
 npm install
