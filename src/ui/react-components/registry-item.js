@@ -25,6 +25,22 @@ define(function (require, exports, module) {
       let latestVersion = registryInfo.version;
       let latestVersionDate = formatDate(registryInfo.time[registryInfo.version]);
 
+      let buttons = [];
+
+      if (!registryInfo._currentlyInstalled) {
+        buttons.push(
+          <button className="btn btn-mini" onClick={this.handleInstall}>{Strings.INSTALL}</button>
+        );
+      } else if (registryInfo._updateAvailable) {
+        buttons.push(
+          <button className="btn btn-mini" onClick={this.handleInstall}>{Strings.UPDATE}</button>
+        );
+      } else {
+        buttons.push(
+          <button className="btn btn-mini" disabled="disabled">{Strings.INSTALLED}</button>
+        );
+      }
+
       return <div className="row-fluid registry-item">
         <div className="span5">
           <div>
@@ -40,7 +56,7 @@ define(function (require, exports, module) {
         <div className="span5">
         </div>
         <div className="span2">
-          <button className="btn btn-mini" onClick={this.handleInstall}>{Strings.INSTALL}</button>
+          {buttons}
         </div>
       </div>;
     }

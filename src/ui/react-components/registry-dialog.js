@@ -1,17 +1,30 @@
 define(function (require, exports, module) {
   'use strict';
 
-  let React = require('react');
-  let Strings = require('strings');
-  let registryUtils = require('../registry-utils');
-  let RegistryItem = require('./registry-item');
+  const React = require('react');
+  const Strings = require('strings');
+  const Logger = require('../../utils/Logger');
+  const registryUtils = require('../registry-utils');
+  const RegistryItem = require('./registry-item');
 
   module.exports = React.createClass({
 
     getInitialState: function () {
       return {
-        registry: registryUtils.getRegistry()
+        registry: []
       };
+    },
+
+    componentDidMount: function () {
+      registryUtils.getRegistry()
+        .then(registry => {
+          if (this.isMounted()) {
+            this.setState({
+              registry
+            });
+          }
+        })
+        .catch(err => Logger.error(err));
     },
 
     render: function () {

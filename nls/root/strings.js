@@ -3,5 +3,7 @@ define({
   CLOSE: 'Close',
   LATEST: 'Latest',
   INSTALL: 'Install',
-  REGISTRY_DIALOG_TITLE: 'brackets-npm-registry'
+  INSTALLED: 'Installed',
+  REGISTRY_DIALOG_TITLE: 'brackets-npm-registry',
+  UPDATE: 'Update'
 });
