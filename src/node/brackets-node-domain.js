@@ -16,7 +16,9 @@
       return buffspawn(nodePath, args, {
         cwd: __dirname
       }).progress(function (buff) {
-        if (progressCallback) { progressCallback(buff.toString()); }
+        if (progressCallback && buff.type === 'stderr') {
+          progressCallback(buff.toString());
+        }
       }).spread(function (stdout) {
         callback(undefined, stdout);
       });
@@ -32,7 +34,9 @@
       return buffspawn(nodePath, args, {
         cwd: __dirname
       }).progress(function (buff) {
-        if (progressCallback) { progressCallback(buff.toString()); }
+        if (progressCallback && buff.type === 'stderr') {
+          progressCallback(buff.toString());
+        }
       }).spread(function (stdout) {
         callback(undefined, stdout);
       });
