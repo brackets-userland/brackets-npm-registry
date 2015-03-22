@@ -1,6 +1,7 @@
 {
   "paths": {
     "bluebird": "./node_modules/bluebird/js/browser/bluebird",
-    "react": "./node_modules/react/dist/react"
+    "react": "./node_modules/react/dist/react",
+    "semver": "./node_modules/semver/semver.browser"
   }
 }

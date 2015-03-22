@@ -27,26 +27,27 @@
     "install": "gulp build"
   },
   "dependencies": {
-    "babel-core": "4.7.3",
-    "bluebird": "2.9.13",
+    "babel-core": "4.7.16",
+    "bluebird": "2.9.14",
     "buffered-spawn": "1.0.1",
-    "eslint": "0.16.1",
-    "express": "4.12.2",
+    "eslint": "0.17.1",
+    "express": "4.12.3",
     "fs-extra": "0.16.5",
     "gulp": "3.8.11",
     "gulp-babel": "4.0.0",
-    "gulp-eslint": "0.6.0",
-    "gulp-sourcemaps": "1.5.0",
+    "gulp-eslint": "0.7.0",
+    "gulp-sourcemaps": "1.5.1",
     "gulp-util": "3.0.4",
     "lodash": "3.5.0",
-    "npm": "2.7.0",
-    "react": "0.12.2",
+    "npm": "2.7.3",
+    "react": "0.13.1",
     "request": "2.53.0",
+    "semver": "4.3.1",
     "through2": "0.6.3",
     "which": "1.0.9"
   },
   "devDependencies": {
-    "chai": "2.1.1",
+    "chai": "2.1.2",
     "mocha": "2.2.1"
   },
   "engines": {
