@@ -47,7 +47,9 @@ function doBabel(globs, singleFile) {
     .pipe(sourcemaps.init())
     .pipe(babel(babelOptions))
     .on('error', swallowError)
-    .pipe(sourcemaps.write('.'))
+    .pipe(sourcemaps.write('.', {
+      sourceMappingURLPrefix: path.resolve(__dirname, 'dist') + '/'
+    }))
     .pipe(gulp.dest(DIST_DIR));
 
   return singleFile ?
