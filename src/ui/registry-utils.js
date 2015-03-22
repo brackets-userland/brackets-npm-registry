@@ -1,31 +1,59 @@
 define(function (require, exports) {
   'use strict';
 
-  let Promise = require('bluebird');
-  let NpmDomain = require('../npm-domain');
-  let Logger = require('../utils/Logger');
-  let downloadedData = null;
+  const _ = brackets.getModule('thirdparty/lodash');
+  const ExtensionManager = brackets.getModule('extensibility/ExtensionManager');
+  const { coroutine: co } = require('bluebird');
+  const Promise = require('bluebird');
+  const semver = require('semver');
+  const NpmDomain = require('../npm-domain');
+  const Logger = require('../utils/Logger');
+  const registryUrl = 'https://brackets-npm-registry.herokuapp.com/registry';
+  let getRegistryPromise = null;
 
-  let download = function () {
-    let url = 'https://brackets-npm-registry.herokuapp.com/registry';
-    return Promise.resolve($.get(url))
+  let _markUpdateAvailable = function (npmRegistry) {
+    // get installed extenions
+    let installedExtensions = _.filter(ExtensionManager.extensions,
+      ext => ext && ext.installInfo && ext.installInfo.locationType === 'user')
+      .map(obj => obj.installInfo.metadata);
+
+    installedExtensions.forEach(insExt => {
+      let npmInfo = _.find(npmRegistry, npmExt => npmExt.name === insExt.name);
+
+      // extension was not found in the npm
+      if (!npmInfo) { return; }
+
+      npmInfo._currentlyInstalled = true;
+      npmInfo._updateAvailable = semver.gt(npmInfo.version, insExt.version);
+    });
+  };
+
+  let _getRegistry = function () {
+    return Promise.resolve($.get(registryUrl))
       .catch(function (err) {
         Logger.error(err);
-        // error downloading? we try to build our own
+        // error downloading? heroku isn't 100% stable, we try to build our own
         return Promise.resolve(NpmDomain.exec('buildRegistry')
           // TODO: only log progress in DEBUG mode
           .progress(msg => Logger.log(`buildRegistry progress => ${msg}`)));
       })
-      .then(function (response) {
-        if (typeof response === 'string') {
-          response = JSON.parse(response);
-        }
-        downloadedData = response;
-        return response;
+      .then(response => {
+        return typeof response === 'string' ? JSON.parse(response) : response;
+      })
+      .then(npmRegistry => {
+        _markUpdateAvailable(npmRegistry);
+        return npmRegistry;
       });
   };
 
-  let install = function (extensionName) {
+  const getRegistry = () => getRegistryPromise || (getRegistryPromise = _getRegistry());
+
+  const checkUpdates = co(function* () {
+    let npmRegistry = yield exports.getRegistry();
+    return npmRegistry.filter(extInfo => extInfo._updateAvailable === true).length > 0;
+  });
+
+  const install = function (extensionName) {
     let targetFolder = brackets.app.getApplicationSupportDirectory() + '/extensions/user';
     Logger.log(`installing ${extensionName} into ${targetFolder}`);
     Promise.resolve(
@@ -42,12 +70,8 @@ define(function (require, exports) {
       });
   };
 
-  let getRegistry = function () {
-    return downloadedData;
-  };
-
-  exports.download = download;
   exports.getRegistry = getRegistry;
+  exports.checkUpdates = checkUpdates;
   exports.install = install;
 
 });
