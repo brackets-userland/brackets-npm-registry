@@ -15,7 +15,8 @@ let log = () => {};
 let result;
 
 const commonNodeLocations = process.platform === 'win32' ? [
-  // TODO: windows paths
+  'C:\Program Files\nodejs\node.exe',
+  'C:\Program Files (x86)\nodejs\node.exe'
 ] : [
   '/usr/bin/node',
   '/usr/local/bin/node'
@@ -64,8 +65,7 @@ module.exports = function (logger) {
   result = new Promise(function (resolve, reject) {
     lookForNodeInPath(resolve, reject);
   }).then(nodePath => {
-    // TODO: windows split char
-    let splitChar = `:`;
+    let splitChar = process.platform === 'win32' ? `;` : `:`;
     let paths = process.env.PATH.split(splitChar);
     paths.unshift(path.dirname(nodePath));
     process.env.PATH = _.uniq(paths).join(splitChar);

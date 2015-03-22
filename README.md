@@ -12,7 +12,7 @@ cd brackets-npm-registry
 npm install
 ```
 
-### windows
+### windows - not tested yet
 
 ```
 cd c:\Users\<user>\AppData\Roaming\Brackets\extensions\user
@@ -21,10 +21,13 @@ cd brackets-npm-registry
 npm install
 ```
 
-### linux
+### linux - not tested yet
 
 ```
-
+cd ???
+git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
+cd brackets-npm-registry
+npm install
 ```
 
 ## uploading an extension to the npm
