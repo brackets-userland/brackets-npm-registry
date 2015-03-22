@@ -9,6 +9,7 @@ define(function (require, exports) {
   const NpmDomain = require('../npm-domain');
   const Logger = require('../utils/Logger');
   const registryUrl = 'https://brackets-npm-registry.herokuapp.com/registry';
+  const progressDialog = require('./react-components/progress-dialog');
   let getRegistryPromise = null;
 
   let _markUpdateAvailable = function (npmRegistry) {
@@ -55,19 +56,19 @@ define(function (require, exports) {
 
   const install = function (extensionName) {
     let targetFolder = brackets.app.getApplicationSupportDirectory() + '/extensions/user';
+
     Logger.log(`installing ${extensionName} into ${targetFolder}`);
-    Promise.resolve(
-      NpmDomain.exec('installExtension', targetFolder, extensionName)
-        .progress(msg => {
-          Logger.log(`progress => ${msg}`);
-        })
-    )
-      .then(() => {
-        Logger.log(`${extensionName} successfully installed`);
-      })
-      .catch(err => {
-        Logger.log(`${extensionName} failed to install:\n`, err.name, `:`, err.message);
-      });
+
+    let p = Promise.resolve(NpmDomain.exec('installExtension', targetFolder, extensionName));
+
+    progressDialog.show(p);
+
+    p.then(() => {
+      Logger.log(`${extensionName} successfully installed`);
+    }).catch(err => {
+      Logger.log(`${extensionName} failed to install:\n`, err.name, `:`, err.message);
+    });
+
   };
 
   exports.getRegistry = getRegistry;

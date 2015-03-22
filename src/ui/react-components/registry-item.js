@@ -24,7 +24,6 @@ define(function (require, exports, module) {
       let registryInfo = this.props.registryInfo;
       let latestVersion = registryInfo.version;
       let latestVersionDate = formatDate(registryInfo.time[registryInfo.version]);
-
       let buttons = [];
 
       if (!registryInfo._currentlyInstalled) {
@@ -37,7 +36,7 @@ define(function (require, exports, module) {
         );
       } else {
         buttons.push(
-          <button className="btn btn-mini" disabled="disabled">{Strings.INSTALLED}</button>
+          <button className="btn btn-mini" onClick={this.handleInstall}>{Strings.REINSTALL}</button>
         );
       }
 
