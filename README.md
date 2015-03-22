@@ -1,6 +1,32 @@
 # brackets-npm-registry [![Build Status](https://travis-ci.org/zaggino/brackets-npm-registry.svg?branch=master)](https://travis-ci.org/zaggino/brackets-npm-registry)
 Extension to install other extensions with npm
 
+## installing brackets-npm-registry
+
+### mac
+
+```
+cd ~/Library/Application\ Support/Brackets/extensions/user/
+git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
+cd brackets-npm-registry
+npm install
+```
+
+### windows
+
+```
+cd c:\Users\<user>\AppData\Roaming\Brackets\extensions\user
+git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
+cd brackets-npm-registry
+npm install
+```
+
+### linux
+
+```
+
+```
+
 ## uploading an extension to the npm
 
 - package.json needs to have `"brackets-extension"` defined in `"keywords"`
