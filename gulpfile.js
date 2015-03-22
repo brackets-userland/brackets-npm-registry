@@ -2,6 +2,8 @@
 
 'use strict';
 
+var packageJson = require('./package.json');
+var conventionalChangelog = require('conventional-changelog');
 var fs = require('fs');
 var path = require('path');
 var gulp = require('gulp');
@@ -91,6 +93,16 @@ gulp.task('watch', function () {
       doEslint([filePath], true);
       doBabel([filePath], true);
     }
+  });
+});
+
+gulp.task('changelog', function () {
+  conventionalChangelog({
+    repository: packageJson.repository.url,
+    version: packageJson.version
+  }, function (err, log) {
+    if (err) { throw err; }
+    fs.writeFileSync(path.resolve(__dirname, 'CHANGELOG.md'), log);
   });
 });
 
