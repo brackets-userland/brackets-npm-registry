@@ -8,10 +8,7 @@ define(function (require, exports, module) {
   const prefix = packageInfo.name;
 
   const defaultPreferences = {
-    nodePath: {
-      type: 'string',
-      value: null
-    }
+    /* nodePath: { type: 'string', value: null } */
   };
 
   const prefixed = key => prefix + '.' + key;

@@ -7,9 +7,8 @@ define(function (require, exports) {
   const Promise = require('bluebird');
   const semver = require('semver');
   const NpmDomain = require('../npm-domain');
-  const Logger = require('../utils/Logger');
+  const Logger = require('../utils/logger');
   const registryUrl = 'https://brackets-npm-registry.herokuapp.com/registry';
-  const Preferences = require('../utils/preferences');
   const progressDialog = require('./react-components/progress-dialog');
   const Utils = require('../utils/index');
   let getRegistryPromise = null;
@@ -36,7 +35,7 @@ define(function (require, exports) {
       .catch(function (err) {
         Logger.error(err);
         // error downloading? heroku isn't 100% stable, we try to build our own
-        return Promise.resolve(NpmDomain.exec('buildRegistry', Preferences.get('nodePath'))
+        return Promise.resolve(NpmDomain.exec('buildRegistry')
           // TODO: only log progress in DEBUG mode
           .progress(msg => Logger.log(`buildRegistry progress => ${msg}`)));
       })
@@ -62,7 +61,6 @@ define(function (require, exports) {
     Logger.log(`installing ${extensionName} into ${targetFolder}`);
 
     let p = Promise.resolve(NpmDomain.exec('installExtension',
-                                           Preferences.get('nodePath'),
                                            targetFolder,
                                            extensionName));
 

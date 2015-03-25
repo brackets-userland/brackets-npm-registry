@@ -3,9 +3,7 @@ define(function (require, exports, module) {
 
   const React = require('react');
   const Strings = require('strings');
-  const Logger = require('../../utils/Logger');
-  const Preferences = require('../../utils/preferences');
-  const QuestionDialog = require('./question-dialog');
+  const Logger = require('../../utils/logger');
   const registryUtils = require('../registry-utils');
   const RegistryItem = require('./registry-item');
 
@@ -42,23 +40,9 @@ define(function (require, exports, module) {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn" onClick={this.setNodePath}>{Strings.SET_NODE_PATH}</button>
           <button className="dialog-button btn primary" data-button-id="ok">{Strings.CLOSE}</button>
         </div>
       </div>;
-    },
-
-    setNodePath: function () {
-      QuestionDialog.show(Strings.SET_NODE_PATH,
-                          Strings.SET_NODE_PATH_QUESTION,
-                          Preferences.get('nodePath'))
-        .then(function (response) {
-          Preferences.set('nodePath', response);
-        })
-        .catch(function (err) {
-          // user canceled is rejected with null
-          if (err) { throw err; }
-        });
     }
 
   });
