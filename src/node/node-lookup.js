@@ -19,7 +19,8 @@ const commonNodeLocations = process.platform === 'win32' ? [
   'C:\Program Files (x86)\nodejs\node.exe'
 ] : [
   '/usr/bin/node',
-  '/usr/local/bin/node'
+  '/usr/local/bin/node',
+  '/Applications/Brackets.app/Contents/MacOS/Brackets-node'
 ];
 
 const lookForNodeElsewhere = function (resolve, reject) {
