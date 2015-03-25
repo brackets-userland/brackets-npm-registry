@@ -13,7 +13,8 @@ function install(targetPath, npmPackageName) {
   const npmInstallFolder = path.resolve(targetPath, 'node_modules', npmPackageName);
   const finalInstallFolder = path.resolve(targetPath, npmPackageName);
 
-  logProgress('loading npm');
+  logProgress(`using node ${process.version}`);
+  logProgress(`loading npm`);
   return fromNode(npm.load.bind(npm))
     .then(() => {
       // npm is loaded, we can start the installation

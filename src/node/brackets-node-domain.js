@@ -36,8 +36,8 @@
         if (progressCallback && buff.type === 'stderr') {
           progressCallback(buff.toString());
         }
-      }).spread(function (stdout) {
-        callback(undefined, stdout);
+      }).spread(function (stdout, stderr) {
+        callback(undefined, progressCallback ? stdout : [stderr, stdout].join('\n'));
       });
 
     }).catch(err => callback(err));
