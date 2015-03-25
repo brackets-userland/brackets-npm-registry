@@ -1,7 +1,7 @@
 define(function (require, exports) {
   'use strict';
 
-  let RegistryDialog = require('./registry-dialog');
+  let RegistryDialog = require('./react-components/registry-dialog');
   let $icon = $('<a id="brackets-npm-registry-icon" href="#"></a>');
 
   exports.init = function () {

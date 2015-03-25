@@ -1,13 +1,14 @@
-define(function (require, exports, module) {
+define(function (require, exports) {
   'use strict';
 
+  const Dialogs = brackets.getModule('widgets/Dialogs');
+  const Logger = require('../../utils/logger');
   const React = require('react');
   const Strings = require('strings');
-  const Logger = require('../../utils/logger');
-  const registryUtils = require('../registry-utils');
   const RegistryItem = require('./registry-item');
+  const RegistryUtils = require('../registry-utils');
 
-  module.exports = React.createClass({
+  let RegistryDialog = React.createClass({
 
     getInitialState: function () {
       return {
@@ -15,8 +16,9 @@ define(function (require, exports, module) {
       };
     },
 
+    // get the registry after the dialog is opened
     componentDidMount: function () {
-      registryUtils.getRegistry()
+      RegistryUtils.getRegistry()
         .then(registry => {
           if (this.isMounted()) {
             this.setState({
@@ -25,6 +27,7 @@ define(function (require, exports, module) {
           }
         })
         .catch(err => Logger.error(err));
+      // TODO: hook on events from RegistryUtils to refresh the dialog when needed
     },
 
     render: function () {
@@ -46,5 +49,14 @@ define(function (require, exports, module) {
     }
 
   });
+
+  let show = function () {
+    let template = '<div class="template modal"/>';
+    let dialog = Dialogs.showModalDialogUsingTemplate(template);
+    let $dialog = dialog.getElement();
+    React.render(<RegistryDialog/>, $dialog[0]);
+  };
+
+  exports.show = show;
 
 });
