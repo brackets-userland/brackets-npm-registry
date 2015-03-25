@@ -14,13 +14,12 @@ const buffspawn = require('buffered-spawn');
 let log = () => {};
 let result;
 
-const commonNodeLocations = process.platform === 'win32' ? [
+let commonNodeLocations = process.platform === 'win32' ? [
   'C:\Program Files\nodejs\node.exe',
   'C:\Program Files (x86)\nodejs\node.exe'
 ] : [
   '/usr/bin/node',
-  '/usr/local/bin/node',
-  '/Applications/Brackets.app/Contents/MacOS/Brackets-node'
+  '/usr/local/bin/node'
 ];
 
 const lookForNodeElsewhere = function (resolve, reject) {
@@ -64,10 +63,16 @@ const lookForNodeInPath = function (resolve, reject) {
     });
 };
 
-module.exports = function (logger) {
+module.exports = function (customNodePath, logger) {
   if (result) { return result; }
 
   if (logger) { log = logger; }
+
+  if (customNodePath) {
+    commonNodeLocations.unshift(customNodePath);
+  }
+
+  commonNodeLocations = _.uniq(_.compact(commonNodeLocations));
 
   result = new Promise(function (resolve, reject) {
     lookForNodeInPath(resolve, reject);

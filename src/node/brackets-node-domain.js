@@ -8,8 +8,8 @@
   const logger = function (...args) { console.log(`[${domainName}]\n`, ...args); };
   let domainManager = null;
 
-  const buildRegistry = function (callback, progressCallback) {
-    nodeLookup(logger).then(nodePath => {
+  const buildRegistry = function (nodePath, callback, progressCallback) {
+    nodeLookup(nodePath, logger).then(nodePath => {
 
       let args = ['registry-builder.js'];
 
@@ -26,8 +26,8 @@
     }).catch(err => callback(err));
   };
 
-  const installExtension = function (targetPath, name, callback, progressCallback) {
-    nodeLookup(logger).then(nodePath => {
+  const installExtension = function (nodePath, targetPath, name, callback, progressCallback) {
+    nodeLookup(nodePath, logger).then(nodePath => {
 
       let args = ['extension-installer.js', targetPath, name];
 
@@ -58,6 +58,7 @@
       true, // is async
       'get a list of extensions from npm', // description
       [
+        {name: 'nodePath', type: 'string'},
         {name: 'extensions', type: 'array'}
       ]
     );
@@ -69,6 +70,7 @@
       true,
       'installs an extension into a given path',
       [
+        {name: 'nodePath', type: 'string'},
         {name: 'targetPath', type: 'string'},
         {name: 'extensionName', type: 'string'},
         {name: 'installLog', type: 'string'}

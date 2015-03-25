@@ -11,7 +11,7 @@ const registryFilePath = path.resolve(__dirname, '../../tmp/registry.json');
 const logger = function (...args) { console.log(...args); };
 
 const buildRegistry = function () {
-  nodeLookup(logger).then(nodePath => {
+  nodeLookup(null, logger).then(nodePath => {
 
     logger('going to build a registry.json file to', registryFilePath);
 
