@@ -1,3 +1,17 @@
+<a name"0.1.5"></a>
+### 0.1.5 (2015-03-26)
+
+
+#### Bug Fixes
+
+* **node:** better node detection (should handle windows cases) ([260f1533](https://github.com/zaggino/brackets-npm-registry/commit/260f1533))
+
+
+#### Features
+
+* **install:** add more info to the install log ([e524433b](https://github.com/zaggino/brackets-npm-registry/commit/e524433b))
+
+
 <a name"0.1.4"></a>
 ### 0.1.4 (2015-03-25)
 
