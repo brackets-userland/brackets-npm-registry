@@ -6,29 +6,49 @@
 */
 
 const _ = require('lodash');
-const { promisifyAll } = require('bluebird');
+const { promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs-extra'));
 const path = require('path');
-
-let nodeSymlinkDir = path.resolve(__dirname, 'nodeSymlinkDir');
+const which = promisify(require('which'));
 let result;
 
 module.exports = function () {
   if (result) { return result; }
 
-  let nodeLinkPath = path.resolve(nodeSymlinkDir, 'node');
-  result = fs.ensureDirAsync(nodeSymlinkDir)
-    .then(() => {
-      // create symlink to node
-      return fs.symlinkAsync(process.execPath, nodeLinkPath);
+  result = which(`node`)
+    .catch(() => null) // ignore the errors
+    .then(nodePath => {
+      // if we didn't find node, we create a symlink to the current one
+      if (!nodePath) {
+        let nodeSymlinkDir = path.resolve(__dirname, 'nodeSymlinkDir');
+        let nodeLinkPath = path.resolve(nodeSymlinkDir,
+                                        process.platform === 'win32' ? `node.exe` : `node`);
+        return fs.ensureDirAsync(nodeSymlinkDir)
+          .then(() => {
+            return fs.lstatAsync(nodeLinkPath);
+          })
+          .catch(() => null) // ignore the errors
+          .then(stat => {
+            if (stat && stat.isSymbolicLink()) {
+              return fs.unlinkAsync(nodeLinkPath);
+            }
+          })
+          .then(() => {
+            return fs.symlinkAsync(process.execPath, nodeLinkPath);
+          })
+          .then(() => {
+            return nodeLinkPath;
+          });
+      }
+      return nodePath;
     })
-    .then(() => {
-      // add symlink dir to system path
+    .then(nodePath => {
+      // ensure that nodePath is in the system path
       let splitChar = process.platform === 'win32' ? `;` : `:`;
       let paths = process.env.PATH.split(splitChar);
-      paths.unshift(nodeSymlinkDir);
+      paths.unshift(path.dirname(nodePath));
       process.env.PATH = _.uniq(paths).join(splitChar);
-      return nodeLinkPath;
+      return nodePath;
     });
 
   return result;
