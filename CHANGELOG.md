@@ -1,3 +1,12 @@
+<a name"0.1.4"></a>
+### 0.1.4 (2015-03-25)
+
+
+#### Features
+
+* **node:** no longer need to setup own node path ([ff16afcf](https://github.com/zaggino/brackets-npm-registry/commit/ff16afcf))
+
+
 <a name"0.1.3"></a>
 ### 0.1.3 (2015-03-25)
 
