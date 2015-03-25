@@ -29,9 +29,9 @@ const lookForNodeElsewhere = function (resolve, reject) {
   any(commonNodeLocations.map(
     path => which(path).then(
     path => buffspawn(path, ['--version']).spread(
-    (/*stdout, stderr*/) => path))
-  )).then(path => {
-    log(`found node at:\n`, path);
+    (stdout/*, stderr*/) => [path, stdout]))
+  )).spread((path, version) => {
+    log(`found node ${version} at:\n`, path);
     resolve(path);
   }).catch(errs => {
     // .any returns errs array
