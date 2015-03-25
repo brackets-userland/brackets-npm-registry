@@ -98,8 +98,11 @@ gulp.task('watch', function () {
 
 gulp.task('changelog', function () {
   conventionalChangelog({
-    repository: packageJson.repository.url,
-    version: packageJson.version
+    repository: packageJson.homepage,
+    version: packageJson.version,
+    //version: '0.1.3',
+    //from: 'v0.1.2',
+    //to: 'v0.1.3'
   }, function (err, log) {
     if (err) { throw err; }
     fs.writeFileSync(path.resolve(__dirname, 'CHANGELOG.md'), log);
