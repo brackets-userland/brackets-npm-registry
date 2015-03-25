@@ -4,6 +4,7 @@ define(function (require, exports) {
   const Strings = require('strings');
   const Dialogs = brackets.getModule('widgets/Dialogs');
   const React = require('react');
+  const Utils = require('../../utils/index');
   let dialog = null;
 
   let ProgressDialog = React.createClass({
@@ -29,7 +30,7 @@ define(function (require, exports) {
         })
         .catch(err => {
           this.setState({
-            lines: this.state.lines.concat('ERROR', err)
+            lines: this.state.lines.concat(Utils.errToString(err))
           });
         })
         .finally(() => {
@@ -76,5 +77,6 @@ define(function (require, exports) {
   };
 
   exports.show = show;
+  exports._ProgressDialog = ProgressDialog;
 
 });

@@ -35,10 +35,16 @@ const lookForNodeElsewhere = function (resolve, reject) {
     resolve(path);
   }).catch(errs => {
     // .any returns errs array
-    errs.forEach(err => {
-      log('failed to find node in common locations:\n', err.name, ':', err.message);
-    });
-    reject(errs);
+    if (errs.forEach) {
+      errs.forEach(err => {
+        log('failed to find node in common locations:\n', err.name, ':', err.message);
+      });
+    }
+    let err = new Error();
+    err.name = 'Error';
+    err.message = 'failed to find node executable';
+    err.details = errs;
+    reject(err);
   });
 };
 

@@ -10,6 +10,7 @@ define(function (require, exports) {
   const Logger = require('../utils/Logger');
   const registryUrl = 'https://brackets-npm-registry.herokuapp.com/registry';
   const progressDialog = require('./react-components/progress-dialog');
+  const Utils = require('../utils/index');
   let getRegistryPromise = null;
 
   let _markUpdateAvailable = function (npmRegistry) {
@@ -66,7 +67,7 @@ define(function (require, exports) {
     p.then(() => {
       Logger.log(`${extensionName} successfully installed`);
     }).catch(err => {
-      Logger.log(`${extensionName} failed to install:\n`, err.name, `:`, err.message);
+      Logger.log(`${extensionName} failed to install:\n`, Utils.errToString(err));
     });
 
   };

@@ -29,7 +29,7 @@
   "dependencies": {
     "babel-core": "4.7.16",
     "bluebird": "2.9.14",
-    "buffered-spawn": "1.0.1",
+    "buffered-spawn": "1.1.0",
     "conventional-changelog": "0.0.16",
     "eslint": "0.17.1",
     "express": "4.12.3",
@@ -42,7 +42,7 @@
     "lodash": "3.5.0",
     "npm": "2.7.3",
     "react": "0.13.1",
-    "request": "2.53.0",
+    "request": "2.54.0",
     "semver": "4.3.1",
     "through2": "0.6.3",
     "which": "1.0.9"
