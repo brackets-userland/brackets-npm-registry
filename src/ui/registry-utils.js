@@ -74,8 +74,13 @@ define(function (require, exports) {
 
   };
 
+  const uninstall = function (extensionName) {
+    // TODO:
+  };
+
   exports.getRegistry = getRegistry;
   exports.checkUpdates = checkUpdates;
   exports.install = install;
+  exports.uninstall = uninstall;
 
 });

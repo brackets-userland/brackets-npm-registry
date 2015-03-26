@@ -11,5 +11,6 @@ define({
   REINSTALL: 'Reinstall',
   SET_NODE_PATH: 'Set node path',
   SET_NODE_PATH_QUESTION: 'Please enter the absolute path to your node executable',
+  UNINSTALL: 'Uninstall',
   UPDATE: 'Update'
 });

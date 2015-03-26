@@ -12,14 +12,6 @@ define(function (require, exports, module) {
 
   module.exports = React.createClass({
 
-    handleInstall: function () {
-      registryUtils.install(this.props.registryInfo.name);
-    },
-
-    showAuthor: function () {
-      NativeApp.openURLInDefaultBrowser(this.props.registryInfo.author.url);
-    },
-
     render: function () {
       let registryInfo = this.props.registryInfo;
       let latestVersion = registryInfo.version;
@@ -28,15 +20,17 @@ define(function (require, exports, module) {
 
       if (!registryInfo._currentlyInstalled) {
         buttons.push(
-          <button className="btn btn-mini" onClick={this.handleInstall}>{Strings.INSTALL}</button>
+          <button className="btn btn-mini btn-install" onClick={this.handleInstall}>{Strings.INSTALL}</button>
         );
       } else if (registryInfo._updateAvailable) {
         buttons.push(
-          <button className="btn btn-mini" onClick={this.handleInstall}>{Strings.UPDATE}</button>
+          <button className="btn btn-mini btn-update" onClick={this.handleInstall}>{Strings.UPDATE}</button>,
+          <button className="btn btn-mini btn-uninstall" onClick={this.handleUninstall}>{Strings.UNINSTALL}</button>
         );
       } else {
         buttons.push(
-          <button className="btn btn-mini" onClick={this.handleInstall}>{Strings.REINSTALL}</button>
+          <button className="btn btn-mini btn-reinstall" onClick={this.handleInstall}>{Strings.REINSTALL}</button>,
+          <button className="btn btn-mini btn-uninstall" onClick={this.handleUninstall}>{Strings.UNINSTALL}</button>
         );
       }
 
@@ -46,7 +40,7 @@ define(function (require, exports, module) {
             <strong>{registryInfo.name}</strong>
           </div>
           <div>
-            {Strings.AUTHOR}: <a onClick={this.showAuthor} href="#">{registryInfo.author.name}</a>
+            {Strings.AUTHOR}: <a onClick={this.handleShowAuthor} href="#">{registryInfo.author.name}</a>
           </div>
           <div>
             {Strings.LATEST}: {latestVersion} - {latestVersionDate}
@@ -58,6 +52,18 @@ define(function (require, exports, module) {
           {buttons}
         </div>
       </div>;
+    },
+
+    handleInstall: function () {
+      registryUtils.install(this.props.registryInfo.name);
+    },
+
+    handleUninstall: function () {
+      registryUtils.uninstall(this.props.registryInfo.name);
+    },
+
+    handleShowAuthor: function () {
+      NativeApp.openURLInDefaultBrowser(this.props.registryInfo.author.url);
     }
 
   });
