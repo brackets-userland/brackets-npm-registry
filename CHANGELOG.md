@@ -1,3 +1,19 @@
+<a name"0.1.6"></a>
+### 0.1.6 (2015-03-27)
+
+
+#### Bug Fixes
+
+* **node:**
+  * works now on windows with node installed in system path ([d422d3f9](https://github.com/zaggino/brackets-npm-registry/commit/d422d3f9))
+  * temporary solution until 'cross-spawn' dependency is fixed ([d1715d5b](https://github.com/zaggino/brackets-npm-registry/commit/d1715d5b))
+
+
+#### Features
+
+* **dialog:** added uninstall button ([dad287d6](https://github.com/zaggino/brackets-npm-registry/commit/dad287d6))
+
+
 <a name"0.1.5"></a>
 ### 0.1.5 (2015-03-26)
 

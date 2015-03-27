@@ -12,7 +12,7 @@ cd brackets-npm-registry
 npm install
 ```
 
-### windows - not tested yet
+### windows - requires [node.js](https://nodejs.org/) or [io.js](https://iojs.org/) installed
 
 ```
 cd %HOMEPATH%\AppData\Roaming\Brackets\extensions\user
