@@ -40,6 +40,10 @@ module.exports = function () {
             return nodeLinkPath;
           });
       }
+      // TODO: this should be removed after cross-spawn is fixed
+      if (process.platform === 'win32') {
+        return 'node';
+      }
       return nodePath;
     })
     .then(nodePath => {
