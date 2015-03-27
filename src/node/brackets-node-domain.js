@@ -5,6 +5,9 @@
   const domainName = 'brackets-npm-registry-domain';
   const buffspawn = require('buffered-spawn');
   const nodeEnsure = require('./node-ensure');
+  const { promisifyAll } = require('bluebird');
+  const fs = promisifyAll(require('fs-extra'));
+  const path = require('path');
   let domainManager = null;
 
   const buildRegistry = function (callback, progressCallback) {
@@ -43,6 +46,22 @@
     }).catch(err => callback(err));
   };
 
+  const uninstallExtension = function (targetPath, name, callback, progressCallback) {
+
+    if (progressCallback) {
+      progressCallback(`uninstalling ${name} from ${targetPath}`);
+    }
+
+    fs.removeAsync(path.resolve(targetPath, name))
+      .then(function () {
+        callback(undefined, `successfully uninstalled ${name}`);
+      })
+      .catch(err => {
+        callback(err);
+      });
+
+  };
+
   exports.init = function (_domainManager) {
     domainManager = _domainManager;
 
@@ -67,6 +86,19 @@
       installExtension,
       true,
       'installs an extension into a given path',
+      [
+        {name: 'targetPath', type: 'string'},
+        {name: 'extensionName', type: 'string'},
+        {name: 'installLog', type: 'string'}
+      ]
+    );
+
+    domainManager.registerCommand(
+      domainName,
+      'uninstallExtension',
+      uninstallExtension,
+      true,
+      'uninstalls an extension from a given path',
       [
         {name: 'targetPath', type: 'string'},
         {name: 'extensionName', type: 'string'},

@@ -75,7 +75,21 @@ define(function (require, exports) {
   };
 
   const uninstall = function (extensionName) {
-    // TODO:
+    let targetFolder = brackets.app.getApplicationSupportDirectory() + '/extensions/user';
+
+    Logger.log(`uninstalling ${extensionName} from ${targetFolder}`);
+
+    let p = Promise.resolve(NpmDomain.exec('uninstallExtension',
+                                           targetFolder,
+                                           extensionName));
+
+    progressDialog.show(p);
+
+    p.then(() => {
+      Logger.log(`${extensionName} successfully uninstalled`);
+    }).catch(err => {
+      Logger.log(`${extensionName} failed to uninstall:\n`, Utils.errToString(err));
+    });
   };
 
   exports.getRegistry = getRegistry;
