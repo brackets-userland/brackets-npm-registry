@@ -18,11 +18,18 @@ module.exports = function () {
   result = which(`node`)
     .catch(() => null) // ignore the errors
     .then(nodePath => {
-      // if we didn't find node, we create a symlink to the current one
+      // if we didn't find node, we use the one from process.execPath
       if (!nodePath) {
+        // we need a symlink if process.execPath is different from node/node.exe
+        let currentName = path.basename(process.execPath);
+        let desiredName = process.platform === `win32` ? `node.exe` : `node`;
+
+        if (currentName === desiredName) {
+          return process.execPath;
+        }
+
         let nodeSymlinkDir = path.resolve(__dirname, 'nodeSymlinkDir');
-        let nodeLinkPath = path.resolve(nodeSymlinkDir,
-                                        process.platform === 'win32' ? `node.exe` : `node`);
+        let nodeLinkPath = path.resolve(nodeSymlinkDir, desiredName);
         return fs.ensureDirAsync(nodeSymlinkDir)
           .then(() => {
             return fs.lstatAsync(nodeLinkPath);
@@ -39,10 +46,6 @@ module.exports = function () {
           .then(() => {
             return nodeLinkPath;
           });
-      }
-      // TODO: this should be removed after cross-spawn is fixed
-      if (process.platform === 'win32') {
-        return 'node';
       }
       return nodePath;
     })
