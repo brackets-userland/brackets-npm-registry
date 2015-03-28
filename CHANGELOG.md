@@ -1,3 +1,12 @@
+<a name"0.1.7"></a>
+### 0.1.7 (2015-03-28)
+
+
+#### Features
+
+* implemented fixed version of cross-spawn ([e3ca6404](https://github.com/zaggino/brackets-npm-registry/commit/e3ca6404))
+
+
 <a name"0.1.6"></a>
 ### 0.1.6 (2015-03-27)
 
