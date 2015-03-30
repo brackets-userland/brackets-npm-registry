@@ -49,7 +49,7 @@ function doBabel(globs, singleFile) {
     gutil.log(gutil.colors.cyan('Start Babel ' + globs[0]));
   }
 
-  var task = gulp.src(globs, {base: path.resolve(__dirname, 'src')})
+  var task = gulp.src(globs, {base: 'src'})
     .pipe(sourcemaps.init())
     .pipe(babel(babelOptions))
     .on('error', swallowError)
