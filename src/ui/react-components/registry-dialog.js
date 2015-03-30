@@ -58,5 +58,7 @@ define(function (require, exports) {
   };
 
   exports.show = show;
+  exports._RegistryItem = RegistryItem;
+  exports._RegistryDialog = RegistryDialog;
 
 });

@@ -99,7 +99,7 @@ gulp.task('watch', function () {
 gulp.task('changelog', function () {
   conventionalChangelog({
     repository: packageJson.homepage,
-    version: packageJson.version,
+    version: packageJson.version
     //version: '0.1.3',
     //from: 'v0.1.2',
     //to: 'v0.1.3'
