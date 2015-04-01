@@ -1,3 +1,17 @@
+<a name"0.2.0"></a>
+## 0.2.0 (2015-04-02)
+
+
+#### Bug Fixes
+
+* react conflicts with old react version in brackets ([95058bfd](https://github.com/zaggino/brackets-npm-registry/commit/95058bfd))
+
+
+#### Features
+
+* registry dialog will ask user to reload after extensions have been modified ([92e3fe60](https://github.com/zaggino/brackets-npm-registry/commit/92e3fe60))
+
+
 <a name"0.1.7"></a>
 ### 0.1.7 (2015-03-28)
 
