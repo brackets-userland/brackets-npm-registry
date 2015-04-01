@@ -1,4 +1,9 @@
-# brackets-npm-registry [![Build Status](https://travis-ci.org/zaggino/brackets-npm-registry.svg?branch=master)](https://travis-ci.org/zaggino/brackets-npm-registry)
+[![NPM version][npm-image]][npm-url]
+[![Build status][travis-image]][travis-url]
+[![Downloads][downloads-image]][downloads-url]
+
+# brackets-npm-registry
+
 Extension to install other extensions with npm
 
 ## How to install brackets-npm-registry
@@ -49,3 +54,10 @@ This extension is written in ES6, so you'll need a few handy gulp tasks when doi
 `gulp watch` - watch files for changes and compile them as you work
 
 `gulp test` - lint your sources with ESLint
+
+[npm-image]: https://img.shields.io/npm/v/brackets-npm-registry.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/brackets-npm-registry
+[travis-image]: https://img.shields.io/travis/zaggino/brackets-npm-registry/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/zaggino/brackets-npm-registry
+[downloads-image]: http://img.shields.io/npm/dm/brackets-npm-registry.svg?style=flat-square
+[downloads-url]: https://npmjs.org/package/brackets-npm-registry
