@@ -1,7 +1,8 @@
-define(function (require, exports) {
+define(function (require, exports, module) {
   'use strict';
 
   const _ = brackets.getModule('thirdparty/lodash');
+  const EventEmitter = require('eventemitter');
   const ExtensionManager = brackets.getModule('extensibility/ExtensionManager');
   const { coroutine: co } = require('bluebird');
   const Promise = require('bluebird');
@@ -11,6 +12,8 @@ define(function (require, exports) {
   const registryUrl = 'https://brackets-npm-registry.herokuapp.com/registry';
   const progressDialog = require('./react-components/progress-dialog');
   const Utils = require('../utils/index');
+
+  let RegistryUtils = new EventEmitter();
   let getRegistryPromise = null;
 
   let _markUpdateAvailable = function (npmRegistry) {
@@ -51,7 +54,7 @@ define(function (require, exports) {
   const getRegistry = () => getRegistryPromise || (getRegistryPromise = _getRegistry());
 
   const checkUpdates = co(function* () {
-    let npmRegistry = yield exports.getRegistry();
+    let npmRegistry = yield getRegistry();
     return npmRegistry.filter(extInfo => extInfo._updateAvailable === true).length > 0;
   });
 
@@ -70,6 +73,8 @@ define(function (require, exports) {
       Logger.log(`${extensionName} successfully installed`);
     }).catch(err => {
       Logger.log(`${extensionName} failed to install:\n`, Utils.errToString(err));
+    }).finally(() => {
+      RegistryUtils.emit('change');
     });
 
   };
@@ -89,12 +94,17 @@ define(function (require, exports) {
       Logger.log(`${extensionName} successfully uninstalled`);
     }).catch(err => {
       Logger.log(`${extensionName} failed to uninstall:\n`, Utils.errToString(err));
+    }).finally(() => {
+      RegistryUtils.emit('change');
     });
+
   };
 
-  exports.getRegistry = getRegistry;
-  exports.checkUpdates = checkUpdates;
-  exports.install = install;
-  exports.uninstall = uninstall;
+  // exports
+  RegistryUtils.getRegistry = getRegistry;
+  RegistryUtils.checkUpdates = checkUpdates;
+  RegistryUtils.install = install;
+  RegistryUtils.uninstall = uninstall;
+  module.exports = RegistryUtils;
 
 });

@@ -33,6 +33,7 @@
     "conventional-changelog": "0.0.16",
     "cross-spawn": "0.2.8",
     "eslint": "0.17.1",
+    "eventemitter2": "0.4.14",
     "express": "4.12.3",
     "fs-extra": "0.16.5",
     "gulp": "3.8.11",
