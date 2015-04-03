@@ -2,9 +2,10 @@
 'use strict';
 
 const npm = require('npm');
-const { all, fromNode } = require('bluebird');
+const { all, fromNode, promisify } = require('bluebird');
 const fs = require('fs-extra');
 const path = require('path');
+const rimraf = promisify(require('rimraf'));
 const logOutput = function (...args) { console.log(...args); };
 const logProgress = function (...args) { console.error(...args); };
 
@@ -34,7 +35,7 @@ function install(targetPath, npmPackageName) {
       logProgress('clearing the directory:\n', finalInstallFolder);
       return all(dirContents.map(entry => {
         if (entry === '.git') { return null; }
-        return fromNode(fs.remove.bind(fs, path.resolve(finalInstallFolder, entry)));
+        return rimraf(path.resolve(finalInstallFolder, entry));
       }).filter(x => !!x));
     })
     .then(() => {
@@ -58,7 +59,7 @@ function install(targetPath, npmPackageName) {
     })
     .finally(() => {
       // all done, now just remove the node_modules temp directory
-      return fromNode(fs.remove.bind(fs, path.resolve(targetPath, 'node_modules')));
+      return rimraf(path.resolve(targetPath, 'node_modules'));
     });
 
 }
