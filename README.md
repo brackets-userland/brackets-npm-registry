@@ -8,18 +8,22 @@ Extension to install other extensions with npm
 
 ## How to install brackets-npm-registry
 
+It's recommended to have [node.js](https://nodejs.org/) or [io.js](https://iojs.org/) installed.
+
 ### mac
 
 ```
+sudo npm install --global gulp-cli
 cd ~/Library/Application\ Support/Brackets/extensions/user/
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
 npm install
 ```
 
-### windows - requires [node.js](https://nodejs.org/) or [io.js](https://iojs.org/) installed
+### windows
 
 ```
+npm install --global gulp-cli
 cd %HOMEPATH%\AppData\Roaming\Brackets\extensions\user
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
@@ -29,6 +33,7 @@ npm install
 ### linux
 
 ```
+sudo npm install --global gulp-cli
 cd ~/.config/Brackets/extensions/user
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
