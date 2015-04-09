@@ -1,3 +1,13 @@
+<a name"0.2.1"></a>
+### 0.2.1 (2015-04-09)
+
+
+#### Bug Fixes
+
+* self-update now works on windows ([67e6c10c](https://github.com/zaggino/brackets-npm-registry/commit/67e6c10c))
+* use `rimraf` to clear directories ([01e15188](https://github.com/zaggino/brackets-npm-registry/commit/01e15188))
+
+
 <a name"0.2.0"></a>
 ## 0.2.0 (2015-04-02)
 
