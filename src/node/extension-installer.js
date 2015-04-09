@@ -1,18 +1,29 @@
 /*eslint strict:0, no-console:0*/
 'use strict';
 
+// https://nodejs.org/api/modules.html#modules_accessing_the_main_module
+const runDirectly = require.main === module;
 const npm = require('npm');
 const { all, fromNode, promisify } = require('bluebird');
 const fs = require('fs-extra');
 const path = require('path');
 const rimraf = promisify(require('rimraf'));
-const logOutput = function (...args) { console.log(...args); };
-const logProgress = function (...args) { console.error(...args); };
+const defaultLogger = {
+  output: (...args) => console.log(...args),
+  progress: (...args) => console.error(...args)
+};
 
-function install(targetPath, npmPackageName) {
+function install(targetPath, npmPackageName, loggers) {
+
+  if (runDirectly) {
+    loggers = null;
+  }
 
   const npmInstallFolder = path.resolve(targetPath, 'node_modules', npmPackageName);
   const finalInstallFolder = path.resolve(targetPath, npmPackageName);
+
+  const logOutput = loggers ? loggers.output : defaultLogger.output;
+  const logProgress = loggers ? loggers.progress : defaultLogger.progress;
 
   logProgress(`using node ${process.version}`);
   logProgress(`loading npm`);
@@ -51,10 +62,16 @@ function install(targetPath, npmPackageName) {
       }));
     })
     .then(() => {
-      logOutput(`successfully installed ${npmPackageName}`);
+      let msg = `successfully installed ${npmPackageName}`;
+      if (runDirectly) {
+        logOutput(msg);
+      }
+      return msg;
     })
     .catch(err => {
-      logProgress(err);
+      if (runDirectly) {
+        logProgress(err);
+      }
       throw err;
     })
     .finally(() => {
@@ -64,8 +81,8 @@ function install(targetPath, npmPackageName) {
 
 }
 
-if (process.argv[1] === __filename) {
+if (runDirectly) {
   install(...process.argv.slice(2));
 } else {
-  module.exports = install;
+  exports.install = install;
 }

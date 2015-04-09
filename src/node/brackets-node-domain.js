@@ -31,19 +31,45 @@
   const installExtension = function (targetPath, name, callback, progressCallback) {
     nodeEnsure().then(nodePath => {
 
+      // brackets currently don't have progress callback
+      // blocked by https://github.com/adobe/brackets/pull/10761
+      let progressBuffer = [];
+      if (!progressCallback) {
+        progressCallback = str => progressBuffer.push(str);
+      }
+
+      let finishWithBuffer = stdout => {
+        if (progressBuffer.length > 0) {
+          stdout = progressBuffer.concat(stdout).join('\n');
+        }
+        callback(undefined, stdout);
+      };
+
+      // self-update is special, we don't want to go this way for every extension
+      // extensionInstaller takes a lot of node memory by loading npm
+      // so we go around this by spawning it as a separate process
+      // but this doesn't work well when self-updating
+      if (name === 'brackets-npm-registry') {
+        return require('./extension-installer')
+          .install(targetPath, name, {
+            output: (...args) => progressCallback(args.join(' ')),
+            progress: (...args) => progressCallback(args.join(' '))
+          })
+          .then(stdout => finishWithBuffer(stdout))
+          .catch(err => callback(err));
+      }
+
       let args = ['extension-installer.js', targetPath, name];
 
       return buffspawn(nodePath, args, {
         cwd: __dirname
-      }).progress(function (buff) {
-        if (progressCallback && buff.type === 'stderr') {
+      }).progress(buff => {
+        if (buff.type === 'stderr') {
           progressCallback(buff.toString());
         }
-      }).spread(function (stdout, stderr) {
-        callback(undefined, progressCallback ? stdout : [stderr, stdout].join('\n'));
-      });
+      }).spread(stdout => finishWithBuffer(stdout));
 
-    }).catch(err => callback(err));
+    }).catch(err => callback(err.stack ? err.stack : err.toString()));
   };
 
   const uninstallExtension = function (targetPath, name, callback, progressCallback) {
