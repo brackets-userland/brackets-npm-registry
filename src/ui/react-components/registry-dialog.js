@@ -64,7 +64,7 @@ define(function (require, exports) {
           <RegistryItem registryInfo={entry} />
         );
       }
-      return <div id="brackets-npm-registry-dialog">
+      return <div>
         <div className="modal-header">
           <h1 className="dialog-title">{Strings.REGISTRY_DIALOG_TITLE}</h1>
         </div>
@@ -114,7 +114,7 @@ define(function (require, exports) {
   };
 
   let show = function () {
-    let template = '<div class="template modal"/>';
+    let template = '<div id="brackets-npm-registry-dialog" class="template modal"/>';
     let dialog = Dialogs.showModalDialogUsingTemplate(template);
     let $dialog = dialog.getElement();
     React.render(<RegistryDialog/>, $dialog[0]);

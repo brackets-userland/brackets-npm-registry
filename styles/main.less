@@ -10,6 +10,7 @@
 }
 
 #brackets-npm-registry-dialog {
+  width: 760px;
   .modal-body {
     padding: 0;
   }
@@ -27,6 +28,9 @@
     }
     h1 {
       font-size: 1.3em;
+      a {
+        color: inherit;
+      }
     }
     h2 {
       font-size: 1em;
@@ -35,6 +39,14 @@
     h1, h2 {
       line-height: 1em;
       margin: 0 0 0.5em 0;
+    }
+    a {
+      &:focus {
+        box-shadow: none;
+      }
+      &:hover {
+        text-decoration: underline !important;
+      }
     }
     button {
       width: 100%;

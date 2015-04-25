@@ -36,7 +36,11 @@ define(function (require, exports, module) {
 
       return <div className="row-fluid registry-item">
         <div className="span10">
-          <h1>{registryInfo.name}</h1>
+          <h1>
+            <a onClick={this.handleShowNpm} href="#">
+              {registryInfo.name}
+            </a>
+          </h1>
           <h2>{registryInfo.description}</h2>
           <div>
             {Strings.AUTHOR}: <a onClick={this.handleShowAuthor} href="#">{registryInfo.author.name}</a>
@@ -57,6 +61,10 @@ define(function (require, exports, module) {
 
     handleUninstall: function () {
       registryUtils.uninstall(this.props.registryInfo.name);
+    },
+
+    handleShowNpm: function () {
+      NativeApp.openURLInDefaultBrowser(`https://www.npmjs.com/package/${this.props.registryInfo.name}`);
     },
 
     handleShowAuthor: function () {
