@@ -35,18 +35,15 @@ define(function (require, exports, module) {
       }
 
       return <div className="row-fluid registry-item">
-        <div className="span5">
-          <div>
-            <strong>{registryInfo.name}</strong>
-          </div>
+        <div className="span10">
+          <h1>{registryInfo.name}</h1>
+          <h2>{registryInfo.description}</h2>
           <div>
             {Strings.AUTHOR}: <a onClick={this.handleShowAuthor} href="#">{registryInfo.author.name}</a>
           </div>
           <div>
             {Strings.LATEST}: {latestVersion} - {latestVersionDate}
           </div>
-        </div>
-        <div className="span5">
         </div>
         <div className="span2">
           {buttons}

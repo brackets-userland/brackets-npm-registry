@@ -10,10 +10,35 @@
 }
 
 #brackets-npm-registry-dialog {
+  .modal-body {
+    padding: 0;
+  }
+  .dialog-message {
+    margin-bottom: 0;
+  }
   .registry-item {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid black;
+    padding: 1em;
+    box-sizing: border-box;
+    &:nth-child(even) {
+      background-color: #dfe2e2;
+    }
+    &:nth-child(odd) {
+      background-color: #e6e9e9;
+    }
+    h1 {
+      font-size: 1.3em;
+    }
+    h2 {
+      font-size: 1em;
+      font-weight: normal;
+    }
+    h1, h2 {
+      line-height: 1em;
+      margin: 0 0 0.5em 0;
+    }
+    button {
+      width: 100%;
+    }
   }
 }
 
