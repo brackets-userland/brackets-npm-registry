@@ -18,7 +18,8 @@ define(function (require, exports) {
 
     getInitialState: function () {
       return {
-        registry: []
+        registry: [],
+        registryLoading: true
       };
     },
 
@@ -28,11 +29,17 @@ define(function (require, exports) {
         .then(registry => {
           if (this.isMounted()) {
             this.setState({
-              registry
+              registry,
+              registryLoading: false
             });
           }
         })
-        .catch(err => Logger.error(err));
+        .catch(err => {
+          Logger.error(err);
+          if (this.isMounted()) {
+            this.setState({registryLoading: false});
+          }
+        });
 
       RegistryUtils.on('change', this.handleRegistryChange);
     },
@@ -47,15 +54,23 @@ define(function (require, exports) {
     },
 
     render: function () {
+      let contents;
+      if (this.state.registryLoading) {
+        contents = <div className="text-center">
+          <span className="spinner inline large spin" />
+        </div>;
+      } else {
+        contents = this.state.registry.map(entry =>
+          <RegistryItem registryInfo={entry} />
+        );
+      }
       return <div id="brackets-npm-registry-dialog">
         <div className="modal-header">
           <h1 className="dialog-title">{Strings.REGISTRY_DIALOG_TITLE}</h1>
         </div>
         <div className="modal-body">
           <div className="dialog-message">
-            {this.state.registry.map(entry =>
-              <RegistryItem registryInfo={entry} />
-            )}
+            {contents}
           </div>
         </div>
         <div className="modal-footer">
