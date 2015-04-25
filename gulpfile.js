@@ -2,16 +2,17 @@
 
 'use strict';
 
-var packageJson = require('./package.json');
+var babel = require('gulp-babel');
 var conventionalChangelog = require('conventional-changelog');
+var eslint = require('gulp-eslint');
 var fs = require('fs');
-var path = require('path');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var eslint = require('gulp-eslint');
-var through = require('through2');
+var packageJson = require('./package.json');
+var path = require('path');
 var sourcemaps = require('gulp-sourcemaps');
-var babel = require('gulp-babel');
+var through = require('through2');
+var watch = require('gulp-watch');
 
 var MAIN_FILES = './*.js';
 var SRC_FILES = './src/**/*.js';
@@ -87,8 +88,8 @@ gulp.task('eslint', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch([SRC_FILES]).on('change', function (event) {
-    var filePath = path.relative(__dirname, event.path);
+  watch(SRC_FILES, function (file) {
+    var filePath = path.relative(__dirname, file.path);
     if (fs.statSync(filePath).isFile()) {
       doEslint([filePath], true);
       doBabel([filePath], true);
@@ -111,4 +112,5 @@ gulp.task('changelog', function () {
 
 gulp.task('build', ['babel']);
 gulp.task('test', ['eslint']);
+gulp.task('dev', ['build', 'watch']);
 gulp.task('default', ['build', 'test']);

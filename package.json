@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "chai": "2.1.2",
+    "gulp-watch": "4.2.4",
     "mocha": "2.2.1"
   },
   "engines": {
