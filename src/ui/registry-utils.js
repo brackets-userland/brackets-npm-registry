@@ -4,7 +4,6 @@ define(function (require, exports, module) {
   const _ = brackets.getModule('thirdparty/lodash');
   const EventEmitter = require('eventemitter');
   const ExtensionManager = brackets.getModule('extensibility/ExtensionManager');
-  const { coroutine: co } = require('bluebird');
   const Promise = require('bluebird');
   const semver = require('semver');
   const NpmDomain = require('../npm-domain');
@@ -12,6 +11,7 @@ define(function (require, exports, module) {
   const registryUrl = 'https://brackets-npm-registry.herokuapp.com/registry';
   const progressDialog = require('./react-components/progress-dialog');
   const Utils = require('../utils/index');
+  const toolbarIcon = require('./toolbar-icon');
 
   let RegistryUtils = new EventEmitter();
   let downloadRegistryPromise = null;
@@ -27,6 +27,8 @@ define(function (require, exports, module) {
   };
 
   let afterRegistryDownloaded = function () {
+    let updatesAvailable = false;
+
     getInstalledExtensions().forEach(insExt => {
       let npmInfo = _.find(npmRegistry, npmExt => npmExt.name === insExt.name);
 
@@ -35,7 +37,10 @@ define(function (require, exports, module) {
 
       npmInfo._currentlyInstalled = true;
       npmInfo._updateAvailable = semver.gt(npmInfo.version, insExt.version);
+      if (npmInfo._updateAvailable) { updatesAvailable = true; }
     });
+
+    toolbarIcon.toggle(updatesAvailable);
   };
 
   let markInstalled = function (extName) {
@@ -83,11 +88,6 @@ define(function (require, exports, module) {
 
   const getRegistry = () => downloadRegistryPromise || (downloadRegistryPromise = _downloadRegistry());
 
-  const checkUpdates = co(function* () {
-    yield getRegistry();
-    return npmRegistry.filter(extInfo => extInfo._updateAvailable === true).length > 0;
-  });
-
   const install = function (extensionName) {
     let targetFolder = brackets.app.getApplicationSupportDirectory() + '/extensions/user';
 
@@ -134,7 +134,6 @@ define(function (require, exports, module) {
 
   // exports
   RegistryUtils.getRegistry = getRegistry;
-  RegistryUtils.checkUpdates = checkUpdates;
   RegistryUtils.install = install;
   RegistryUtils.remove = remove;
   module.exports = RegistryUtils;

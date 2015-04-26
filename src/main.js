@@ -10,9 +10,7 @@ define(function (require) {
   const init = co(function* () {
     toolbarIcon.init();
     // TODO: check for updates at most once every 6 hours?
-    registryUtils
-      .checkUpdates()
-      .then(updatesAvailable => toolbarIcon.toggle(updatesAvailable));
+    registryUtils.getRegistry();
   });
 
   AppInit.appReady(() => init().catch(e => Logger.error(e)));
