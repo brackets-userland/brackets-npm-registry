@@ -101,9 +101,6 @@ function buildRegistry(targetFile) {
 
         const githubRepo = /^https?:\/\/[^\/]*github.com\/([^\/]+)\/([^\/]+)$/;
 
-        let githubIssueCount = -1;
-        let githubPullCount = -1;
-
         let candidates = _.compact([
           extensionInfo.repository ? extensionInfo.repository.url : null,
           extensionInfo.repository,
@@ -118,10 +115,16 @@ function buildRegistry(targetFile) {
         let username = m[1];
         let repo = m[2];
 
-        extensionInfo.githubUsername = username;
-        extensionInfo.githubRepository = repo;
-
         if (repo.match(/\.git$/)) { repo = repo.slice(0, -4); }
+
+        extensionInfo.github = {};
+        extensionInfo.github.username = username;
+        extensionInfo.github.repository = repo;
+        extensionInfo.github.issueCount = -1;
+        extensionInfo.github.pullCount = -1;
+
+        let githubIssueCount = NaN;
+        let githubPullCount = NaN;
 
         return new Promise((resolve) => {
           let url = `https://github.com/${username}/${repo}/issues/counts`;
@@ -139,8 +142,8 @@ function buildRegistry(targetFile) {
             resolve();
           });
         }).then(() => {
-          extensionInfo.githubIssueCount = isNaN(githubIssueCount) ? -1 : githubIssueCount;
-          extensionInfo.githubPullCount = isNaN(githubPullCount) ? -1 : githubPullCount;
+          extensionInfo.github.issueCount = isNaN(githubIssueCount) ? -1 : githubIssueCount;
+          extensionInfo.github.pullCount = isNaN(githubPullCount) ? -1 : githubPullCount;
         });
       })).then(() => extensionInfos);
     })

@@ -54,15 +54,19 @@ define(function (require, exports, module) {
           </div>
           <div>
             {Strings.LATEST}: {latestVersion} - {latestVersionDate}
-            <span>; </span>
-            <a className="defaultColor" href="" onClick={this.handleShowIssues}>
-              {registryInfo.githubIssueCount || '?'} {Strings._OPEN_ISSUES}
-            </a>
-            <span>, </span>
-            <a className="defaultColor" href="" onClick={this.handleShowPulls}>
-              {registryInfo.githubPullCount || '?'} {Strings._OPEN_PULLS}
-            </a>
-            {' ' + Strings._ON_GITHUB}
+            {registryInfo.github ?
+              <span>
+                <span>; </span>
+                <a className="defaultColor" href="" onClick={this.handleShowIssues}>
+                  {registryInfo.github.issueCount} {Strings._OPEN_ISSUES}
+                </a>
+                <span>, </span>
+                <a className="defaultColor" href="" onClick={this.handleShowPulls}>
+                  {registryInfo.github.pullCount} {Strings._OPEN_PULLS}
+                </a>
+                {' ' + Strings._ON_GITHUB}
+              </span>
+            : ''}
           </div>
           <div>
             {this.props.registryInfo.downloadsLastWeek} {Strings._DOWNLOADS} {Strings._LAST_WEEK + ', '}
@@ -113,13 +117,13 @@ define(function (require, exports, module) {
     },
 
     handleShowIssues: function () {
-      NativeApp.openURLInDefaultBrowser('https://github.com/' + this.props.registryInfo.githubUsername +
-                                        '/' + this.props.registryInfo.githubRepository + '/issues');
+      NativeApp.openURLInDefaultBrowser('https://github.com/' + this.props.registryInfo.github.username +
+                                        '/' + this.props.registryInfo.github.repository + '/issues');
     },
 
     handleShowPulls: function () {
-      NativeApp.openURLInDefaultBrowser('https://github.com/' + this.props.registryInfo.githubUsername +
-                                        '/' + this.props.registryInfo.githubRepository + '/pulls');
+      NativeApp.openURLInDefaultBrowser('https://github.com/' + this.props.registryInfo.github.username +
+                                        '/' + this.props.registryInfo.github.repository + '/pulls');
     }
 
   });
