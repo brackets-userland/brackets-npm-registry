@@ -1,6 +1,7 @@
 define(function (require, exports, module) {
   'use strict';
 
+  let _ = brackets.getModule('thirdparty/lodash');
   let NativeApp = brackets.getModule('utils/NativeApp');
   let React = require('react');
   let Strings = require('strings');
@@ -11,6 +12,12 @@ define(function (require, exports, module) {
   };
 
   module.exports = React.createClass({
+
+    getInitialState: function () {
+      return {
+        dependeciesShown: false
+      };
+    },
 
     render: function () {
       let registryInfo = this.props.registryInfo;
@@ -37,11 +44,21 @@ define(function (require, exports, module) {
       return <div className="row-fluid registry-item">
         <div className="span10">
           <h1>
-            <a onClick={this.handleShowNpm} href="#">
+            <a className="defaultColor" onClick={this.handleShowNpm} href="#">
               {registryInfo.name}
             </a>
           </h1>
           <h2>{registryInfo.description}</h2>
+          <div>
+            {this.getDependencies().length} {Strings._DEPENDENCIES}
+            {!this.state.dependeciesShown ?
+              <span>
+                {" "}<a className="defaultColor" href="" onClick={this.handleShowDependencies}>{Strings._SHOW_LINK}</a>
+              </span>
+            :
+              <span>{': ' + this.getDependencies().join(', ')}</span>
+            }
+          </div>
           <div>
             {Strings.AUTHOR}: <a onClick={this.handleShowAuthor} href="#">{registryInfo.author.name}</a>
           </div>
@@ -53,6 +70,17 @@ define(function (require, exports, module) {
           {buttons}
         </div>
       </div>;
+    },
+
+    getDependencies: function () {
+      return [].concat(
+        _.map(this.props.registryInfo.dependencies, (version, key) => `${key}@${version}`),
+        _.map(this.props.registryInfo.devDependencies, (version, key) => `${key}@${version}`)
+      ).sort();
+    },
+
+    handleShowDependencies: function () {
+      this.setState({dependeciesShown: true});
     },
 
     handleInstall: function () {

@@ -2,6 +2,7 @@ define({
   AUTHOR: 'Author',
   CANCEL: 'Cancel',
   CLOSE: 'Close',
+  _DEPENDENCIES: 'dependencies',
   LATEST: 'Latest',
   INSTALL: 'Install',
   INSTALLED: 'Installed',
@@ -13,5 +14,6 @@ define({
   RELOAD: 'Reload',
   SET_NODE_PATH: 'Set node path',
   SET_NODE_PATH_QUESTION: 'Please enter the absolute path to your node executable',
+  _SHOW_LINK: 'show\u2026',
   UPDATE: 'Update'
 });
