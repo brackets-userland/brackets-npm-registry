@@ -3,6 +3,8 @@ define({
   CANCEL: 'Cancel',
   CLOSE: 'Close',
   _DEPENDENCIES: 'dependencies',
+  _DOWNLOADS: 'downloads',
+  _LAST_WEEK: 'last week',
   LATEST: 'Latest',
   INSTALL: 'Install',
   INSTALLED: 'Installed',
@@ -15,5 +17,6 @@ define({
   SET_NODE_PATH: 'Set node path',
   SET_NODE_PATH_QUESTION: 'Please enter the absolute path to your node executable',
   _SHOW_LINK: 'show\u2026',
+  _TOTAL: 'total',
   UPDATE: 'Update'
 });

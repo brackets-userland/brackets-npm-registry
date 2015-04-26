@@ -56,6 +56,10 @@ define(function (require, exports, module) {
             {Strings.LATEST}: {latestVersion} - {latestVersionDate}
           </div>
           <div>
+            {this.props.registryInfo.downloadsLastWeek} {Strings._DOWNLOADS} {Strings._LAST_WEEK + ', '}
+            {this.props.registryInfo.downloadsTotal} {Strings._DOWNLOADS} {Strings._TOTAL}
+          </div>
+          <div>
             {this.getDependencies().length} {Strings._DEPENDENCIES}
             {!this.state.dependeciesShown ?
               <span>

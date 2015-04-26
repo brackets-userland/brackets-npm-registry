@@ -9,6 +9,20 @@ const request = require('request');
 const logOutput = function (...args) { console.log(...args); };
 const logProgress = function (...args) { console.error(...args); };
 
+function calculateDownloadMetrics(extensionInfo) {
+  let downloadsArray = extensionInfo.downloads;
+  // downloadsLastWeek
+  let today = new Date();
+  today.setDate(today.getDate() - 7);
+  let weekAgo = today.toISOString().substring(0, 10);
+  extensionInfo.downloadsLastWeek = downloadsArray
+    .filter(obj => obj.day >= weekAgo)
+    .reduce((sum, obj) => sum + obj.downloads, 0);
+  // downloadsTotal
+  extensionInfo.downloadsTotal = downloadsArray
+    .reduce((sum, obj) => sum + obj.downloads, 0);
+}
+
 function buildRegistry(targetFile) {
 
   logProgress('loading npm');
@@ -63,11 +77,13 @@ function buildRegistry(targetFile) {
 
           if (extensionIds.length === 1) {
             extensionInfos[0].downloads = body.downloads;
+            calculateDownloadMetrics(extensionInfos[0]);
           } else {
             extensionInfos.forEach(extensionInfo => {
               let info = body[extensionInfo.name];
               if (info && info.downloads) {
                 extensionInfo.downloads = info.downloads;
+                calculateDownloadMetrics(extensionInfo);
               }
             });
           }
