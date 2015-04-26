@@ -1,3 +1,26 @@
+<a name"0.3.0"></a>
+## 0.3.0 (2015-04-26)
+
+
+#### Bug Fixes
+
+* toolbar icon will correctly toggle after updates are installed ([0fa99ca9](https://github.com/zaggino/brackets-npm-registry/commit/0fa99ca9))
+
+
+#### Features
+
+* check for updates only once every 12 hours ([a441c8d3](https://github.com/zaggino/brackets-npm-registry/commit/a441c8d3))
+* dialog buttons will update immediately after installing or updating ([1bd86d50](https://github.com/zaggino/brackets-npm-registry/commit/1bd86d50))
+* show open issues / pull requests on github ([0db3ea46](https://github.com/zaggino/brackets-npm-registry/commit/0db3ea46))
+* show download counts for the extensions ([86e54806](https://github.com/zaggino/brackets-npm-registry/commit/86e54806))
+* display dependencies in the dialog ([d03fc851](https://github.com/zaggino/brackets-npm-registry/commit/d03fc851))
+* make install and reinstall buttons distinct by colors ([3243c2cb](https://github.com/zaggino/brackets-npm-registry/commit/3243c2cb))
+* added spinner to the progress dialog ([47917ce7](https://github.com/zaggino/brackets-npm-registry/commit/47917ce7))
+* link extension name to npm url ([ecc6c4ee](https://github.com/zaggino/brackets-npm-registry/commit/ecc6c4ee))
+* display extension 'description' in the dialog ([c0434384](https://github.com/zaggino/brackets-npm-registry/commit/c0434384))
+* show loading spinner before the registry info is loaded ([33e76b1d](https://github.com/zaggino/brackets-npm-registry/commit/33e76b1d))
+
+
 <a name"0.2.1"></a>
 ### 0.2.1 (2015-04-09)
 
