@@ -44,7 +44,7 @@ define(function (require, exports, module) {
       return <div className="row-fluid registry-item">
         <div className="span10">
           <h1>
-            <a className="defaultColor" onClick={this.handleShowNpm} href="#">
+            <a className="defaultColor" onClick={this.handleShowNpm.bind(this, this.props.registryInfo.name)} href="#">
               {registryInfo.name}
             </a>
           </h1>
@@ -76,10 +76,16 @@ define(function (require, exports, module) {
             {this.getDependencies().length} {Strings._DEPENDENCIES}
             {!this.state.dependeciesShown ?
               <span>
-                {" "}<a className="defaultColor" href="" onClick={this.handleShowDependencies}>{Strings._SHOW_LINK}</a>
+                {' '}<a className="defaultColor" href="" onClick={this.handleShowDependencies}>{Strings._SHOW_LINK}</a>
               </span>
             :
-              <span>{': ' + this.getDependencies().join(', ')}</span>
+              <ul>
+                {this.getDependencies().map(obj =>
+                  <li><a className="defaultColor" href="" onClick={this.handleShowNpm.bind(this, obj.name)}>
+                    {obj.name}@{obj.version}
+                  </a></li>
+                )}
+              </ul>
             }
           </div>
         </div>
@@ -90,10 +96,12 @@ define(function (require, exports, module) {
     },
 
     getDependencies: function () {
-      return [].concat(
-        _.map(this.props.registryInfo.dependencies, (version, key) => `${key}@${version}`),
-        _.map(this.props.registryInfo.devDependencies, (version, key) => `${key}@${version}`)
-      ).sort();
+      let mapper = (version, name) => { return {name, version}; };
+      let dependencies = [].concat(
+        _.map(this.props.registryInfo.dependencies, mapper),
+        _.map(this.props.registryInfo.devDependencies, mapper)
+      );
+      return _.sortBy(dependencies, 'name');
     },
 
     handleShowDependencies: function () {
@@ -108,8 +116,8 @@ define(function (require, exports, module) {
       registryUtils.remove(this.props.registryInfo.name);
     },
 
-    handleShowNpm: function () {
-      NativeApp.openURLInDefaultBrowser(`https://www.npmjs.com/package/${this.props.registryInfo.name}`);
+    handleShowNpm: function (pkg) {
+      NativeApp.openURLInDefaultBrowser(`https://www.npmjs.com/package/${pkg}`);
     },
 
     handleShowAuthor: function () {
