@@ -50,6 +50,12 @@ define(function (require, exports, module) {
           </h1>
           <h2>{registryInfo.description}</h2>
           <div>
+            {Strings.AUTHOR}: <a onClick={this.handleShowAuthor} href="#">{registryInfo.author.name}</a>
+          </div>
+          <div>
+            {Strings.LATEST}: {latestVersion} - {latestVersionDate}
+          </div>
+          <div>
             {this.getDependencies().length} {Strings._DEPENDENCIES}
             {!this.state.dependeciesShown ?
               <span>
@@ -58,12 +64,6 @@ define(function (require, exports, module) {
             :
               <span>{': ' + this.getDependencies().join(', ')}</span>
             }
-          </div>
-          <div>
-            {Strings.AUTHOR}: <a onClick={this.handleShowAuthor} href="#">{registryInfo.author.name}</a>
-          </div>
-          <div>
-            {Strings.LATEST}: {latestVersion} - {latestVersionDate}
           </div>
         </div>
         <div className="span2">
