@@ -59,9 +59,7 @@
           .catch(err => callback(err));
       }
 
-      let args = ['extension-installer.js', targetPath, name];
-
-      return buffspawn(nodePath, args, {
+      return buffspawn(nodePath, ['extension-installer.js', targetPath, name], {
         cwd: __dirname
       }).progress(buff => {
         if (buff.type === 'stderr') {
@@ -72,15 +70,15 @@
     }).catch(err => callback(err.stack ? err.stack : err.toString()));
   };
 
-  const uninstallExtension = function (targetPath, name, callback, progressCallback) {
+  const removeExtension = function (targetPath, name, callback, progressCallback) {
 
     if (progressCallback) {
-      progressCallback(`uninstalling ${name} from ${targetPath}`);
+      progressCallback(`removing ${name} from ${targetPath}`);
     }
 
     fs.removeAsync(path.resolve(targetPath, name))
       .then(function () {
-        callback(undefined, `successfully uninstalled ${name}`);
+        callback(undefined, `successfully removed ${name}`);
       })
       .catch(err => {
         callback(err);
@@ -121,10 +119,10 @@
 
     domainManager.registerCommand(
       domainName,
-      'uninstallExtension',
-      uninstallExtension,
+      'removeExtension',
+      removeExtension,
       true,
-      'uninstalls an extension from a given path',
+      'removes an extension from a given path',
       [
         {name: 'targetPath', type: 'string'},
         {name: 'extensionName', type: 'string'},

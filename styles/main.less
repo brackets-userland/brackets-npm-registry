@@ -1,3 +1,7 @@
+@import './brackets_variables.less';
+
+@font-weight-semibold: 500;
+
 #brackets-npm-registry-icon {
   background-position: center;
   background-repeat: no-repeat;
@@ -50,12 +54,55 @@
     }
     button {
       width: 100%;
+      box-shadow: inset 0 1px 0 @bc-highlight;
+      text-shadow: 0 -1px 0 @bc-shadow-small;
+      .dark & {
+        box-shadow: inset 0 1px 0 @dark-bc-highlight;
+        text-shadow: 0 -1px 0 @dark-bc-shadow-small;
+      }
+    }
+    .btn-update {
+      background-color: @bc-secondary-btn-bg;
+      border-color: @bc-secondary-btn-border;
+      color: @bc-text-alt;
+      font-weight: @font-weight-semibold;
+      .dark & {
+        background-color: @dark-bc-secondary-btn-bg;
+        border-color: @dark-bc-secondary-btn-border;
+        color: @dark-bc-text-alt;
+      }
+    }
+    .btn-reinstall {
+      background-color: @bc-warning-bg;
+      border-color: darken(@bc-warning-bg, 30%);
+      color: @bc-warning-text;
+      .dark & {
+        background-color: @dark-bc-warning-bg;
+        border-color: @dark-bc-primary-btn-border;
+        color: @dark-bc-warning-text;
+      }
     }
   }
 }
 
 #brackets-npm-registry-progress-dialog {
+  position: relative;
   textarea {
     min-height: 300px;
+  }
+  .modal-body {
+    > div {
+      position: relative;
+      > .spinner {
+        @size: 36px;
+        position: absolute;
+        width: @size;
+        height: @size;
+        left: 50%;
+        top: 50%;
+        margin-left: -1 * @size / 2;
+        margin-top: -1 * @size / 2;
+      }
+    }
   }
 }

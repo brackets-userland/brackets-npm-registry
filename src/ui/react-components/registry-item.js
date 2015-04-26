@@ -25,12 +25,12 @@ define(function (require, exports, module) {
       } else if (registryInfo._updateAvailable) {
         buttons.push(
           <button className="btn btn-mini btn-update" onClick={this.handleInstall}>{Strings.UPDATE}</button>,
-          <button className="btn btn-mini btn-uninstall" onClick={this.handleUninstall}>{Strings.UNINSTALL}</button>
+          <button className="btn btn-mini btn-remove" onClick={this.handleRemove}>{Strings.REMOVE}</button>
         );
       } else {
         buttons.push(
           <button className="btn btn-mini btn-reinstall" onClick={this.handleInstall}>{Strings.REINSTALL}</button>,
-          <button className="btn btn-mini btn-uninstall" onClick={this.handleUninstall}>{Strings.UNINSTALL}</button>
+          <button className="btn btn-mini btn-remove" onClick={this.handleRemove}>{Strings.REMOVE}</button>
         );
       }
 
@@ -59,8 +59,8 @@ define(function (require, exports, module) {
       registryUtils.install(this.props.registryInfo.name);
     },
 
-    handleUninstall: function () {
-      registryUtils.uninstall(this.props.registryInfo.name);
+    handleRemove: function () {
+      registryUtils.remove(this.props.registryInfo.name);
     },
 
     handleShowNpm: function () {

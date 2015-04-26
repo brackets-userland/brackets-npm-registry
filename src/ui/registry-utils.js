@@ -79,21 +79,21 @@ define(function (require, exports, module) {
 
   };
 
-  const uninstall = function (extensionName) {
+  const remove = function (extensionName) {
     let targetFolder = brackets.app.getApplicationSupportDirectory() + '/extensions/user';
 
-    Logger.log(`uninstalling ${extensionName} from ${targetFolder}`);
+    Logger.log(`removing ${extensionName} from ${targetFolder}`);
 
-    let p = Promise.resolve(NpmDomain.exec('uninstallExtension',
+    let p = Promise.resolve(NpmDomain.exec('removeExtension',
                                            targetFolder,
                                            extensionName));
 
     progressDialog.show(p);
 
     p.then(() => {
-      Logger.log(`${extensionName} successfully uninstalled`);
+      Logger.log(`${extensionName} successfully removed`);
     }).catch(err => {
-      Logger.log(`${extensionName} failed to uninstall:\n`, Utils.errToString(err));
+      Logger.log(`${extensionName} failed to remove:\n`, Utils.errToString(err));
     }).finally(() => {
       RegistryUtils.emit('change');
     });
@@ -104,7 +104,7 @@ define(function (require, exports, module) {
   RegistryUtils.getRegistry = getRegistry;
   RegistryUtils.checkUpdates = checkUpdates;
   RegistryUtils.install = install;
-  RegistryUtils.uninstall = uninstall;
+  RegistryUtils.remove = remove;
   module.exports = RegistryUtils;
 
 });
