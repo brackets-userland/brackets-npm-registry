@@ -10,7 +10,19 @@ const app = express();
 const registryFilePath = path.resolve(__dirname, '../../tmp/registry.json');
 const logger = function (...args) { console.log(...args); };
 
-const buildRegistry = function () {
+let buildRegistry;
+let buildRegistryInterval;
+
+const scheduleBuild = function () {
+  // call now
+  setTimeout(buildRegistry, 1);
+  // clear current interval
+  clearInterval(buildRegistryInterval);
+  // and then every 30 minutes
+  buildRegistryInterval = setInterval(buildRegistry, 30 * 60000);
+};
+
+buildRegistry = function () {
   nodeEnsure().then(nodePath => {
 
     logger('going to build a registry.json file to', registryFilePath);
@@ -23,6 +35,9 @@ const buildRegistry = function () {
       logger('buildRegistry progress =>', buff.toString());
     }).then(function () {
       logger('registry file built at', registryFilePath);
+    }).catch(function () {
+      logger('failed to build registry');
+      scheduleBuild();
     });
 
   }).catch(err => {
@@ -52,8 +67,5 @@ app.get('/', function (request, response) {
 
 app.listen(app.get('port'), function () {
   logger(`Node app is running at localhost:${app.get('port')}`);
-  // call on startup
-  setTimeout(buildRegistry, 1);
-  // and then every 30 minutes
-  setInterval(buildRegistry, 30 * 60000);
+  scheduleBuild();
 });
