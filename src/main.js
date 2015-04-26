@@ -6,11 +6,20 @@ define(function (require) {
   const toolbarIcon = require('./ui/toolbar-icon');
   const Logger = require('./utils/logger');
   const registryUtils = require('./ui/registry-utils');
+  const Preferences = require('./utils/preferences');
 
   const init = co(function* () {
     toolbarIcon.init();
-    // TODO: check for updates at most once every 6 hours?
-    registryUtils.getRegistry();
+
+    const CHECK_PERIOD = 12 * 60 * 60 * 1000; // 12 hours * 60 minutes * 60 seconds * 1000 millis
+    let lastUpdateCheck = Preferences.get('lastUpdateCheck') || 0;
+    let currentTime = new Date().valueOf();
+    if (currentTime - CHECK_PERIOD > lastUpdateCheck) {
+      registryUtils.getRegistry()
+        .then(function () {
+          Preferences.set('lastUpdateCheck', currentTime);
+        });
+    }
   });
 
   AppInit.appReady(() => init().catch(e => Logger.error(e)));
