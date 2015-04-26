@@ -1,6 +1,8 @@
 /*eslint strict:0, no-console:0*/
 'use strict';
 
+const _ = require('lodash');
+const cheerio = require('cheerio');
 const npm = require('npm');
 const Promise = require('bluebird');
 const { all, fromNode, promisify, promisifyAll } = require('bluebird');
@@ -92,6 +94,56 @@ function buildRegistry(targetFile) {
 
         });
       });
+    })
+    .then(extensionInfos => {
+      logProgress(`getting issue/pr counts for the extensions`);
+      return Promise.all(extensionInfos.map(extensionInfo => {
+
+        const githubRepo = /^https?:\/\/[^\/]*github.com\/([^\/]+)\/([^\/]+)$/;
+
+        let githubIssueCount = -1;
+        let githubPullCount = -1;
+
+        let candidates = _.compact([
+          extensionInfo.repository ? extensionInfo.repository.url : null,
+          extensionInfo.repository,
+          extensionInfo.homepage
+        ]).filter(x => typeof x === 'string').filter(x => x.match(githubRepo));
+
+        if (candidates.length === 0) {
+          return Promise.resolve();
+        }
+
+        let m = candidates[0].match(githubRepo);
+        let username = m[1];
+        let repo = m[2];
+
+        extensionInfo.githubUsername = username;
+        extensionInfo.githubRepository = repo;
+
+        if (repo.match(/\.git$/)) { repo = repo.slice(0, -4); }
+
+        return new Promise((resolve) => {
+          let url = `https://github.com/${username}/${repo}/issues/counts`;
+          console.log(url);
+          request({
+            url,
+            method: `GET`,
+            json: true,
+            headers: {
+              'User-Agent': `brackets-npm-registry`
+            }
+          }, (error, response, body) => {
+            if (error || response.statusCode !== 200) { return resolve(); }
+            githubIssueCount = parseInt(cheerio.load(body.issues_count)('.counter').text(), 10);
+            githubPullCount = parseInt(cheerio.load(body.pulls_count)('.counter').text(), 10);
+            resolve();
+          });
+        }).then(() => {
+          extensionInfo.githubIssueCount = isNaN(githubIssueCount) ? -1 : githubIssueCount;
+          extensionInfo.githubPullCount = isNaN(githubPullCount) ? -1 : githubPullCount;
+        });
+      })).then(() => extensionInfos);
     })
     .then(extensionInfos => {
       let strResults = JSON.stringify(extensionInfos, null, 2);
