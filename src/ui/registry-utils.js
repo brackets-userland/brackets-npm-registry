@@ -14,15 +14,20 @@ define(function (require, exports, module) {
   const Utils = require('../utils/index');
 
   let RegistryUtils = new EventEmitter();
-  let getRegistryPromise = null;
+  let downloadRegistryPromise = null;
+  let installedExtensions = null;
+  let npmRegistry = null;
 
-  let _markUpdateAvailable = function (npmRegistry) {
-    // get installed extenions
-    let installedExtensions = _.filter(ExtensionManager.extensions,
-      ext => ext && ext.installInfo && ext.installInfo.locationType === 'user')
-      .map(obj => obj.installInfo.metadata);
+  let getInstalledExtensions = function () {
+    if (installedExtensions) { return installedExtensions; }
+    installedExtensions = _.filter(ExtensionManager.extensions,
+                                   ext => ext && ext.installInfo && ext.installInfo.locationType === 'user')
+                           .map(obj => obj.installInfo.metadata);
+    return installedExtensions;
+  };
 
-    installedExtensions.forEach(insExt => {
+  let afterRegistryDownloaded = function () {
+    getInstalledExtensions().forEach(insExt => {
       let npmInfo = _.find(npmRegistry, npmExt => npmExt.name === insExt.name);
 
       // extension was not found in the npm
@@ -33,7 +38,31 @@ define(function (require, exports, module) {
     });
   };
 
-  let _getRegistry = function () {
+  let markInstalled = function (extName) {
+    let installedObj = _.find(installedExtensions, {name: extName});
+    let registryObj = _.find(npmRegistry, {name: extName});
+
+    if (!installedObj) { // install
+      installedExtensions.push(registryObj);
+    } else { // update/reinstall
+      installedObj.version = registryObj.version;
+    }
+
+    afterRegistryDownloaded();
+  };
+
+  let markRemoved = function (extName) {
+    let installedObj = _.find(installedExtensions, {name: extName});
+    let registryObj = _.find(npmRegistry, {name: extName});
+
+    installedExtensions = _.without(installedExtensions, installedObj);
+    delete registryObj._currentlyInstalled;
+    delete registryObj._updateAvailable;
+
+    afterRegistryDownloaded();
+  };
+
+  let _downloadRegistry = function () {
     return Promise.resolve($.get(registryUrl))
       .catch(function (err) {
         Logger.error(err);
@@ -45,16 +74,17 @@ define(function (require, exports, module) {
       .then(response => {
         return typeof response === 'string' ? JSON.parse(response) : response;
       })
-      .then(npmRegistry => {
-        _markUpdateAvailable(npmRegistry);
+      .then(_npmRegistry => {
+        npmRegistry = _npmRegistry;
+        afterRegistryDownloaded();
         return npmRegistry;
       });
   };
 
-  const getRegistry = () => getRegistryPromise || (getRegistryPromise = _getRegistry());
+  const getRegistry = () => downloadRegistryPromise || (downloadRegistryPromise = _downloadRegistry());
 
   const checkUpdates = co(function* () {
-    let npmRegistry = yield getRegistry();
+    yield getRegistry();
     return npmRegistry.filter(extInfo => extInfo._updateAvailable === true).length > 0;
   });
 
@@ -70,11 +100,12 @@ define(function (require, exports, module) {
     progressDialog.show(p);
 
     p.then(() => {
+      markInstalled(extensionName);
       Logger.log(`${extensionName} successfully installed`);
     }).catch(err => {
       Logger.log(`${extensionName} failed to install:\n`, Utils.errToString(err));
     }).finally(() => {
-      RegistryUtils.emit('change');
+      RegistryUtils.emit('change', npmRegistry);
     });
 
   };
@@ -91,11 +122,12 @@ define(function (require, exports, module) {
     progressDialog.show(p);
 
     p.then(() => {
+      markRemoved(extensionName);
       Logger.log(`${extensionName} successfully removed`);
     }).catch(err => {
       Logger.log(`${extensionName} failed to remove:\n`, Utils.errToString(err));
     }).finally(() => {
-      RegistryUtils.emit('change');
+      RegistryUtils.emit('change', npmRegistry);
     });
 
   };

@@ -48,8 +48,9 @@ define(function (require, exports) {
       RegistryUtils.off('change', this.handleRegistryChange);
     },
 
-    handleRegistryChange: function () {
+    handleRegistryChange: function (npmRegistry) {
       // extension has been installed/updated/removed
+      this.setState({registry: npmRegistry});
       restartRequiredAfterClose = true;
     },
 
@@ -90,7 +91,7 @@ define(function (require, exports) {
     let dialog = Dialogs.showModalDialog(
       DefaultDialogs.DIALOG_ID_CHANGE_EXTENSIONS,
       BracketsStrings.CHANGE_AND_RELOAD_TITLE,
-      BracketsStrings.CHANGE_AND_RELOAD_MESSAGE,
+      Strings.CLOSE_AND_RELOAD_MESSAGE,
       [
         {
           className: Dialogs.DIALOG_BTN_CLASS_NORMAL,

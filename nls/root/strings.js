@@ -1,7 +1,9 @@
+/*eslint max-len:0*/
 define({
   AUTHOR: 'Author',
   CANCEL: 'Cancel',
   CLOSE: 'Close',
+  CLOSE_AND_RELOAD_MESSAGE: 'After modifying installed extensions, Brackets will need to reload. You\'ll be prompted to save unsaved changes.',
   _DEPENDENCIES: 'dependencies',
   _DOWNLOADS: 'downloads',
   _LAST_WEEK: 'last week',
