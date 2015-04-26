@@ -125,7 +125,6 @@ function buildRegistry(targetFile) {
 
         return new Promise((resolve) => {
           let url = `https://github.com/${username}/${repo}/issues/counts`;
-          console.log(url);
           request({
             url,
             method: `GET`,
