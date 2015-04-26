@@ -52,6 +52,9 @@ define(function (require, exports) {
         </div>
         <div className="modal-body">
           <div className="row-fluid">
+            {!this.state.finished ?
+              <span className="spinner inline large spin" />
+            : ''}
             <textarea className="span12" readOnly="readonly" value={this.state.lines.join('\n')}></textarea>
           </div>
         </div>
