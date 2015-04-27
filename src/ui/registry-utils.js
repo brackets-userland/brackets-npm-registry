@@ -26,6 +26,18 @@ define(function (require, exports, module) {
     return installedExtensions;
   };
 
+  let registrySort = function () {
+    npmRegistry.sort((a, b) => {
+      let result = 0;
+      // first sort by update available
+      if (a._updateAvailable) { result -= 1; }
+      if (b._updateAvailable) { result += 1; }
+      if (result !== 0) { return result; }
+      // default sort by name
+      return a.name.localeCompare(b.name);
+    });
+  };
+
   let afterRegistryDownloaded = function () {
     let updatesAvailable = false;
 
@@ -41,6 +53,7 @@ define(function (require, exports, module) {
     });
 
     toolbarIcon.toggle(updatesAvailable);
+    registrySort();
   };
 
   let markInstalled = function (extName) {
