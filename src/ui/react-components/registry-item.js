@@ -42,7 +42,7 @@ define(function (require, exports, module) {
       }
 
       return <div className="row-fluid registry-item">
-        <div className="span10">
+        <div className="span10 text-left">
           <h1>
             <a className="defaultColor" onClick={this.handleShowNpm.bind(this, this.props.registryInfo.name)} href="#">
               {registryInfo.name}
