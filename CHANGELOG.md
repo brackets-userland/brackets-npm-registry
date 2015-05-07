@@ -1,3 +1,17 @@
+<a name"0.3.1"></a>
+### 0.3.1 (2015-05-07)
+
+
+#### Bug Fixes
+
+* dialog colors in dark theme ([3f461db6](https://github.com/zaggino/brackets-npm-registry/commit/3f461db6))
+
+
+#### Features
+
+* registry is now sorted that extensions with updates are first ([9ea726b9](https://github.com/zaggino/brackets-npm-registry/commit/9ea726b9))
+
+
 <a name"0.3.0"></a>
 ## 0.3.0 (2015-04-26)
 
