@@ -1,3 +1,12 @@
+<a name"0.3.3"></a>
+### 0.3.3 (2015-05-07)
+
+
+#### Bug Fixes
+
+* add text-left to registry dialog, some extensions are breaking it ([53d34b2d](https://github.com/zaggino/brackets-npm-registry/commit/53d34b2d))
+
+
 <a name"0.3.2"></a>
 ### 0.3.2 (2015-05-07)
 
