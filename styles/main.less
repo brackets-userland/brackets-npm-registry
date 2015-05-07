@@ -53,7 +53,10 @@
     }
     a {
       &.defaultColor {
-        color: inherit;
+        color: #333333;
+        .dark & {
+          color: #cccccc;
+        }
       }
       &:focus {
         box-shadow: none;
