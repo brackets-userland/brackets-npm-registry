@@ -40,6 +40,12 @@ cd brackets-npm-registry
 npm install
 ```
 
+## How to use brackets-npm-registry
+
+You'll get a new icon in the right toolbar to open this extensions registry.
+
+![how-to-use.png](how-to-use.png)
+
 ## How to upload extensions so the brackets-npm-registry is able to find them
 
 - package.json needs to have `"brackets-extension"` defined in `"keywords"`
