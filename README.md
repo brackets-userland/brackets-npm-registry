@@ -24,7 +24,7 @@ npm install
 
 ```
 npm install --global gulp-cli
-cd %HOMEPATH%\AppData\Roaming\Brackets\extensions\user
+cd /D %HOMEDRIVE%%HOMEPATH%\AppData\Roaming\Brackets\extensions\user
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
 npm install
