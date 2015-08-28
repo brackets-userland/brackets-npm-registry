@@ -8,12 +8,8 @@ define(function (require, exports, module) {
   ExtensionUtils.loadStyleSheet(module, 'styles/main.less');
 
   // launch compiled js code
-  if (!window.regeneratorRuntime) { require('babel-polyfill'); }
-  require('dist/main');
-
-  /*
-  // TODO: provide base for writing unit tests
-  if (window.isBracketsTestWindow) { }
-  */
+  require(window._babelPolyfill ? [] : ['babel-polyfill'], function () {
+    require(['dist/main']);
+  });
 
 });
