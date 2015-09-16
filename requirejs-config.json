@@ -1,6 +1,8 @@
 {
   "paths": {
     "babel-polyfill": "./node_modules/babel-core/browser-polyfill",
+    "core-js-shim": "./node_modules/babel-core/node_modules/core-js/client/shim.min",
+    "regenerator-runtime": "./node_modules/babel-core/node_modules/regenerator/runtime",
     "bluebird": "./node_modules/bluebird/js/browser/bluebird",
     "eventemitter": "./node_modules/eventemitter2/lib/eventemitter2",
     "semver": "./node_modules/semver/semver.browser"
