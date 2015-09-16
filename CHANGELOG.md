@@ -1,3 +1,12 @@
+<a name"0.3.4"></a>
+### 0.3.4 (2015-09-17)
+
+
+#### Maintenance
+
+* Updated dependencies used by the package and got rid of custom react build in favor of the one included with Brackets.
+
+
 <a name"0.3.3"></a>
 ### 0.3.3 (2015-05-07)
 
