@@ -1,13 +1,10 @@
 {
   "paths": {
     "babel-polyfill": "./node_modules/babel-core/browser-polyfill",
+    "core-js-shim": "./node_modules/babel-core/node_modules/core-js/client/shim.min",
+    "regenerator-runtime": "./node_modules/babel-core/node_modules/regenerator/runtime",
     "bluebird": "./node_modules/bluebird/js/browser/bluebird",
     "eventemitter": "./node_modules/eventemitter2/lib/eventemitter2",
-    "//": "./node_modules/react/dist/react",
-    "//": "using own 'modified' react until Brackets react is up to date",
-    "//": "changed react/lib/DOMProperty.ID_ATTRIBUTE_NAME",
-    "//": "see https://github.com/facebook/react/issues/1939",
-    "react": "./thirdparty/react",
     "semver": "./node_modules/semver/semver.browser"
   }
 }

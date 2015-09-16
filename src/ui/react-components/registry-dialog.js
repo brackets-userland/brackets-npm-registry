@@ -6,7 +6,7 @@ define(function (require, exports) {
   const Dialogs = brackets.getModule('widgets/Dialogs');
   const DefaultDialogs = brackets.getModule('widgets/DefaultDialogs');
   const Logger = require('../../utils/logger');
-  const React = require('react');
+  const React = brackets.getModule('thirdparty/react');
   const Strings = require('strings');
   const BracketsStrings = brackets.getModule('strings');
   const RegistryItem = require('./registry-item');

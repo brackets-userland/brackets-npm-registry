@@ -3,7 +3,7 @@ define(function (require, exports, module) {
 
   let _ = brackets.getModule('thirdparty/lodash');
   let NativeApp = brackets.getModule('utils/NativeApp');
-  let React = require('react');
+  let React = brackets.getModule('thirdparty/react');
   let Strings = require('strings');
   let registryUtils = require('../registry-utils');
 
