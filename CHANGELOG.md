@@ -1,3 +1,17 @@
+<a name"0.3.5"></a>
+### 0.3.5 (2015-09-23)
+
+
+#### Bug Fixes
+
+* Extension should now install without problems using npm 3.x.
+
+
+#### Maintenance
+
+* Updated some dependencies.
+
+
 <a name"0.3.4"></a>
 ### 0.3.4 (2015-09-17)
 
