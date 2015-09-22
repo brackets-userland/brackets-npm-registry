@@ -17,37 +17,38 @@ module.exports = function () {
 
   result = which(`node`)
     .catch(() => null) // ignore the errors
-    .then(nodePath => {
-      // if we didn't find node, we use the one from process.execPath
-      if (!nodePath) {
-        // we need a symlink if process.execPath is different from node/node.exe
-        let currentName = path.basename(process.execPath);
-        let desiredName = process.platform === `win32` ? `node.exe` : `node`;
+    .then(whichNode => {
+      // use the node from process.execPath so any compiled dependencies use same version of node as brackets
+      // we need a symlink if process.execPath is different from node/node.exe
+      let currentName = path.basename(process.execPath);
+      let desiredName = process.platform === `win32` ? `node.exe` : `node`;
 
-        if (currentName === desiredName) {
-          return process.execPath;
-        }
-
-        let nodeSymlinkDir = path.resolve(__dirname, 'nodeSymlinkDir');
-        let nodeLinkPath = path.resolve(nodeSymlinkDir, desiredName);
-        return fs.ensureDirAsync(nodeSymlinkDir)
-          .then(() => {
-            return fs.lstatAsync(nodeLinkPath);
-          })
-          .catch(() => null) // ignore the errors
-          .then(stat => {
-            if (stat && stat.isSymbolicLink()) {
-              return fs.unlinkAsync(nodeLinkPath);
-            }
-          })
-          .then(() => {
-            return fs.symlinkAsync(process.execPath, nodeLinkPath);
-          })
-          .then(() => {
-            return nodeLinkPath;
-          });
+      if (currentName === desiredName) {
+        return process.execPath;
       }
-      return nodePath;
+
+      let nodeSymlinkDir = path.resolve(__dirname, 'nodeSymlinkDir');
+      let nodeLinkPath = path.resolve(nodeSymlinkDir, desiredName);
+      return fs.ensureDirAsync(nodeSymlinkDir)
+        .then(() => {
+          return fs.lstatAsync(nodeLinkPath);
+        })
+        .catch(() => null) // ignore the errors
+        .then(stat => {
+          if (stat && stat.isSymbolicLink()) {
+            return fs.unlinkAsync(nodeLinkPath);
+          }
+        })
+        .then(() => {
+          return fs.symlinkAsync(process.execPath, nodeLinkPath);
+        })
+        .then(() => {
+          return nodeLinkPath;
+        })
+        .catch(err => {
+          if (whichNode) { return whichNode; }
+          throw err;
+        });
     })
     .then(nodePath => {
       // ensure that nodePath is in the system path

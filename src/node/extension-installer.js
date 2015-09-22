@@ -25,7 +25,7 @@ function install(targetPath, npmPackageName, loggers) {
   const logOutput = loggers ? loggers.output : defaultLogger.output;
   const logProgress = loggers ? loggers.progress : defaultLogger.progress;
 
-  logProgress(`using node ${process.version}`);
+  logProgress(`using node ${process.version}, npm ${npm.version}`);
   logProgress(`loading npm`);
   return fromNode(npm.load.bind(npm))
     .then(() => {
