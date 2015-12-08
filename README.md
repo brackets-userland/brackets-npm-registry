@@ -13,7 +13,6 @@ It's recommended to have [node.js](https://nodejs.org/) or [io.js](https://iojs.
 ### mac
 
 ```
-sudo npm install --global gulp-cli
 cd ~/Library/Application\ Support/Brackets/extensions/user/
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
@@ -23,7 +22,6 @@ npm install
 ### windows
 
 ```
-npm install --global gulp-cli
 cd /D %HOMEDRIVE%%HOMEPATH%\AppData\Roaming\Brackets\extensions\user
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
@@ -33,7 +31,6 @@ npm install
 ### linux
 
 ```
-sudo npm install --global gulp-cli
 cd ~/.config/Brackets/extensions/user
 git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry
 cd brackets-npm-registry
