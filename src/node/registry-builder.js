@@ -99,7 +99,7 @@ function buildRegistry(targetFile) {
       logProgress(`getting issue/pr counts for the extensions`);
       return Promise.all(extensionInfos.map(extensionInfo => {
 
-        const githubRepo = /^(git\+)?https?:\/\/[^\/]*github.com\/([^\/]+)\/([^\/]+)$/;
+        const githubRepo = /https?:\/\/[^\/]*github.com\/([^\/]+)\/([^\/]+)$/;
 
         let candidates = _.compact([
           extensionInfo.repository ? extensionInfo.repository.url : null,
@@ -112,8 +112,8 @@ function buildRegistry(targetFile) {
         }
 
         let m = candidates[0].match(githubRepo);
-        let username = m[2];
-        let repo = m[3];
+        let username = m[1];
+        let repo = m[2];
 
         if (repo.match(/\.git$/)) { repo = repo.slice(0, -4); }
 
