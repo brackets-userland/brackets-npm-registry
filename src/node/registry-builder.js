@@ -127,18 +127,25 @@ function buildRegistry(targetFile) {
         let githubPullCount = NaN;
 
         return new Promise((resolve) => {
-          let url = `https://github.com/${username}/${repo}/issues/counts`;
+          let url = `https://github.com/${username}/${repo}/issues`;
           request({
             url,
             method: `GET`,
-            json: true,
             headers: {
               'User-Agent': `brackets-npm-registry`
             }
           }, (error, response, body) => {
-            if (error || response.statusCode !== 200) { return resolve(); }
-            githubIssueCount = parseInt(cheerio.load(body.issues_count)('.counter').text(), 10);
-            githubPullCount = parseInt(cheerio.load(body.pulls_count)('.counter').text(), 10);
+            if (error || response.statusCode !== 200) {
+              if (response) {
+                logProgress(`GET ${url} ERR`, response.statusCode);
+              } else {
+                logProgress(`GET ${url} ERR`, error);
+              }
+              return resolve();
+            }
+            let parsedBody = cheerio.load(body);
+            githubIssueCount = parseInt(parsedBody(`a[href="/${username}/${repo}/issues"] .counter`).text(), 10);
+            githubPullCount = parseInt(parsedBody(`a[href="/${username}/${repo}/pulls"] .counter`).text(), 10);
             resolve();
           });
         }).then(() => {
