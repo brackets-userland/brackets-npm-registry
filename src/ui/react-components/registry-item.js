@@ -80,8 +80,8 @@ define(function (require, exports, module) {
               </span>
             :
               <ul>
-                {this.getDependencies().map(obj =>
-                  <li><a className="defaultColor" href="" onClick={this.handleShowNpm.bind(this, obj.name)}>
+                {this.getDependencies().map((obj, i) =>
+                  <li key={i}><a className="defaultColor" href="" onClick={this.handleShowNpm.bind(this, obj.name)}>
                     {obj.name}@{obj.version}
                   </a></li>
                 )}
