@@ -62,7 +62,7 @@ define(function (require, exports) {
         </div>;
       } else {
         contents = this.state.registry.map(entry =>
-          <RegistryItem registryInfo={entry} />
+          <RegistryItem key={entry._id} registryInfo={entry} />
         );
       }
       return <div>
