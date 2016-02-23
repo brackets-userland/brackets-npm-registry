@@ -23,7 +23,7 @@ const scheduleBuild = function () {
 };
 
 buildRegistry = function () {
-  nodeEnsure().then(nodePath => {
+  nodeEnsure(nodePath => {
 
     logger('going to build a registry.json file to', registryFilePath);
 

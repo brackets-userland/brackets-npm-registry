@@ -12,13 +12,44 @@ const which = promisify(require('which'));
 
 const splitChar = process.platform === 'win32' ? `;` : `:`;
 
-let result;
 let pushedPath;
 
-function nodeEnsure() {
-  if (result) { return result; }
+function revertPathChanges() {
+  let paths = process.env.PATH.split(splitChar);
+  if (paths[0] === pushedPath) {
+    paths.shift();
+  }
+  process.env.PATH = paths.join(splitChar);
+}
 
-  result = which(`node`)
+let createSymlinkPromise;
+function createSymlink(desiredName) {
+  if (createSymlinkPromise) { return createSymlinkPromise; }
+
+  let nodeSymlinkDir = path.resolve(__dirname, 'nodeSymlinkDir');
+  let nodeLinkPath = path.resolve(nodeSymlinkDir, desiredName);
+  createSymlinkPromise = fs.ensureDirAsync(nodeSymlinkDir)
+    .then(() => {
+      return fs.lstatAsync(nodeLinkPath);
+    })
+    .catch(() => null) // ignore the errors
+    .then(stat => {
+      if (stat && stat.isSymbolicLink()) {
+        return fs.unlinkAsync(nodeLinkPath);
+      }
+    })
+    .then(() => {
+      return fs.symlinkAsync(process.execPath, nodeLinkPath);
+    })
+    .then(() => {
+      return nodeLinkPath;
+    });
+  return createSymlinkPromise;
+}
+
+function nodeEnsure(contextFunction) {
+
+  return which(`node`)
     .catch(() => null) // ignore the errors
     .then(whichNode => {
       // use the node from process.execPath so any compiled dependencies use same version of node as brackets
@@ -30,24 +61,7 @@ function nodeEnsure() {
         return process.execPath;
       }
 
-      let nodeSymlinkDir = path.resolve(__dirname, 'nodeSymlinkDir');
-      let nodeLinkPath = path.resolve(nodeSymlinkDir, desiredName);
-      return fs.ensureDirAsync(nodeSymlinkDir)
-        .then(() => {
-          return fs.lstatAsync(nodeLinkPath);
-        })
-        .catch(() => null) // ignore the errors
-        .then(stat => {
-          if (stat && stat.isSymbolicLink()) {
-            return fs.unlinkAsync(nodeLinkPath);
-          }
-        })
-        .then(() => {
-          return fs.symlinkAsync(process.execPath, nodeLinkPath);
-        })
-        .then(() => {
-          return nodeLinkPath;
-        })
+      return createSymlink(desiredName)
         .catch(err => {
           if (whichNode) { return whichNode; }
           throw err;
@@ -60,20 +74,29 @@ function nodeEnsure() {
       paths.unshift(pushedPath);
       process.env.PATH = paths.join(splitChar);
       return nodePath;
+    })
+    .then(nodePath => {
+      if (contextFunction) {
+        return Promise.resolve(contextFunction());
+      }
+      return nodePath;
+    })
+    .catch(err => {
+      if (contextFunction) {
+        revertPathChanges();
+      }
+      throw err;
+    })
+    .then(result => {
+      if (contextFunction) {
+        revertPathChanges();
+      }
+      return result;
     });
 
-  return result;
-}
-
-function revertPathChanges() {
-  let paths = process.env.PATH.split(splitChar);
-  if (paths[0] === pushedPath) {
-    paths.shift();
-  }
-  process.env.PATH = paths.join(splitChar);
 }
 
 module.exports = {
-  nodeEnsure,
-  revertPathChanges
+  revertPathChanges,
+  nodeEnsure
 };

@@ -11,7 +11,7 @@
   let domainManager = null;
 
   const buildRegistry = function (callback, progressCallback) {
-    nodeEnsure().then(nodePath => {
+    nodeEnsure(nodePath => {
 
       let args = ['registry-builder.js'];
 
@@ -29,7 +29,7 @@
   };
 
   const installExtension = function (targetPath, name, callback, progressCallback) {
-    nodeEnsure().then(nodePath => {
+    nodeEnsure(nodePath => {
 
       // brackets currently don't have progress callback
       // blocked by https://github.com/adobe/brackets/pull/10761
