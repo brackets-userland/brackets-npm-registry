@@ -12,7 +12,7 @@ const path = require('path');
 const which = promisify(require('which'));
 let result;
 
-module.exports = function () {
+function nodeEnsure() {
   if (result) { return result; }
 
   result = which(`node`)
@@ -60,4 +60,8 @@ module.exports = function () {
     });
 
   return result;
+}
+
+module.exports = {
+  nodeEnsure: nodeEnsure
 };

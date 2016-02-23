@@ -4,7 +4,7 @@
 
   const domainName = 'brackets-npm-registry-domain';
   const buffspawn = require('buffered-spawn');
-  const nodeEnsure = require('./node-ensure');
+  const nodeEnsure = require('./node-ensure').nodeEnsure;
   const { promisifyAll } = require('bluebird');
   const fs = promisifyAll(require('fs-extra'));
   const path = require('path');
