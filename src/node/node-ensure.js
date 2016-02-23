@@ -5,12 +5,15 @@
   adds the current node process to the system path
 */
 
-const _ = require('lodash');
 const { promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs-extra'));
 const path = require('path');
 const which = promisify(require('which'));
+
+const splitChar = process.platform === 'win32' ? `;` : `:`;
+
 let result;
+let pushedPath;
 
 function nodeEnsure() {
   if (result) { return result; }
@@ -52,16 +55,25 @@ function nodeEnsure() {
     })
     .then(nodePath => {
       // ensure that nodePath is in the system path
-      let splitChar = process.platform === 'win32' ? `;` : `:`;
       let paths = process.env.PATH.split(splitChar);
-      paths.unshift(path.dirname(nodePath));
-      process.env.PATH = _.uniq(paths).join(splitChar);
+      pushedPath = path.dirname(nodePath);
+      paths.unshift(pushedPath);
+      process.env.PATH = paths.join(splitChar);
       return nodePath;
     });
 
   return result;
 }
 
+function revertPathChanges() {
+  let paths = process.env.PATH.split(splitChar);
+  if (paths[0] === pushedPath) {
+    paths.shift();
+  }
+  process.env.PATH = paths.join(splitChar);
+}
+
 module.exports = {
-  nodeEnsure: nodeEnsure
+  nodeEnsure,
+  revertPathChanges
 };
