@@ -3,12 +3,10 @@
 'use strict';
 
 var babel = require('gulp-babel');
-var conventionalChangelog = require('conventional-changelog');
 var eslint = require('gulp-eslint');
 var fs = require('fs');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var packageJson = require('./package.json');
 var path = require('path');
 var sourcemaps = require('gulp-sourcemaps');
 var through = require('through2');
@@ -94,19 +92,6 @@ gulp.task('watch', function () {
       doEslint([filePath], true);
       doBabel([filePath], true);
     }
-  });
-});
-
-gulp.task('changelog', function () {
-  conventionalChangelog({
-    repository: packageJson.homepage,
-    version: packageJson.version
-    //version: '0.1.3',
-    //from: 'v0.1.2',
-    //to: 'v0.1.3'
-  }, function (err, log) {
-    if (err) { throw err; }
-    fs.writeFileSync(path.resolve(__dirname, 'CHANGELOG.md'), log);
   });
 });
 
