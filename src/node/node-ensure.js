@@ -77,7 +77,7 @@ function nodeEnsure(contextFunction) {
     })
     .then(nodePath => {
       if (contextFunction) {
-        return Promise.resolve(contextFunction());
+        return Promise.resolve(contextFunction(nodePath));
       }
       return nodePath;
     })
