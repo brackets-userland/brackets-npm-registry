@@ -9,6 +9,7 @@ const nodeEnsure = require('../node/node-ensure');
 const app = express();
 const registryFilePath = path.resolve(__dirname, '../../tmp/registry.json');
 const logger = function (...args) { console.log(...args); };
+const utils = require('../node/utils');
 
 let buildRegistry;
 let buildRegistryInterval;
@@ -30,7 +31,8 @@ buildRegistry = function () {
     let args = ['../node/registry-builder.js', registryFilePath];
 
     return buffspawn(nodePath, args, {
-      cwd: __dirname
+      cwd: __dirname,
+      env: utils.processEnvWithPath(path.dirname(nodePath))
     }).progress(function (buff) {
       logger('buildRegistry progress =>', buff.toString());
     }).then(function () {

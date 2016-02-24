@@ -2,6 +2,8 @@
 'use strict';
 
 // https://nodejs.org/api/modules.html#modules_accessing_the_main_module
+const Promise = require('bluebird');
+const exec = require('child_process').exec;
 const runDirectly = require.main === module;
 const npm = require('npm');
 const { all, fromNode, promisify } = require('bluebird');
@@ -12,6 +14,17 @@ const defaultLogger = {
   output: (...args) => console.log(...args),
   progress: (...args) => console.error(...args)
 };
+
+function execCmd(cmd) {
+  return new Promise(function (resolve) {
+    exec(cmd, function (err, stdout, stderr) {
+      if (err || stderr) {
+        return resolve(`err: ${err || stderr}`);
+      }
+      return resolve(stdout.trim());
+    });
+  });
+}
 
 function install(targetPath, npmPackageName, loggers) {
 
@@ -26,8 +39,12 @@ function install(targetPath, npmPackageName, loggers) {
   const logProgress = loggers ? loggers.progress : defaultLogger.progress;
 
   logProgress(`using node ${process.version}, npm ${npm.version}`);
-  logProgress(`loading npm`);
-  return fromNode(npm.load.bind(npm))
+  return Promise.all([execCmd('node --version'), execCmd('npm --version')])
+    .then(([nodeVersion, npmVersion]) => {
+      logProgress(`node in path version ${nodeVersion}, npm in path version ${npmVersion}`);
+      logProgress(`loading npm`);
+      return fromNode(npm.load.bind(npm));
+    })
     .then(() => {
       // npm is loaded, we can start the installation
       logProgress(`executing npm install ${targetPath} ${npmPackageName}`);

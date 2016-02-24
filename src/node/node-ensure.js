@@ -1,11 +1,10 @@
-/*eslint strict:0,no-process-env:0*/
+/* eslint strict:0 */
 'use strict';
 
 /*
-  adds the current node process to the system path
+  returns current node process path
 */
 
-const _ = require('lodash');
 const { promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs-extra'));
 const path = require('path');
@@ -49,14 +48,6 @@ module.exports = function () {
           if (whichNode) { return whichNode; }
           throw err;
         });
-    })
-    .then(nodePath => {
-      // ensure that nodePath is in the system path
-      let splitChar = process.platform === 'win32' ? `;` : `:`;
-      let paths = process.env.PATH.split(splitChar);
-      paths.unshift(path.dirname(nodePath));
-      process.env.PATH = _.uniq(paths).join(splitChar);
-      return nodePath;
     });
 
   return result;
