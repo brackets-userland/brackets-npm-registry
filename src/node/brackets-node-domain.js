@@ -4,14 +4,14 @@
 
   const domainName = 'brackets-npm-registry-domain';
   const buffspawn = require('buffered-spawn');
-  const nodeEnsure = require('./node-ensure').nodeEnsure;
+  const nodeEnsure = require('./node-ensure');
   const { promisifyAll } = require('bluebird');
   const fs = promisifyAll(require('fs-extra'));
   const path = require('path');
   let domainManager = null;
 
   const buildRegistry = function (callback, progressCallback) {
-    nodeEnsure(nodePath => {
+    nodeEnsure().then(nodePath => {
 
       let args = ['registry-builder.js'];
 
@@ -29,7 +29,7 @@
   };
 
   const installExtension = function (targetPath, name, callback, progressCallback) {
-    nodeEnsure(nodePath => {
+    nodeEnsure().then(nodePath => {
 
       // brackets currently don't have progress callback
       // blocked by https://github.com/adobe/brackets/pull/10761

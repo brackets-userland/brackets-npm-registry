@@ -5,7 +5,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const buffspawn = require('buffered-spawn');
-const nodeEnsure = require('../node/node-ensure').nodeEnsure;
+const nodeEnsure = require('../node/node-ensure');
 const app = express();
 const registryFilePath = path.resolve(__dirname, '../../tmp/registry.json');
 const logger = function (...args) { console.log(...args); };
@@ -23,7 +23,7 @@ const scheduleBuild = function () {
 };
 
 buildRegistry = function () {
-  nodeEnsure(nodePath => {
+  nodeEnsure().then(nodePath => {
 
     logger('going to build a registry.json file to', registryFilePath);
 
