@@ -5,6 +5,7 @@
   adds the current node process to the system path
 */
 
+const Promise = require('bluebird');
 const { promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs-extra'));
 const path = require('path');
@@ -81,19 +82,11 @@ function nodeEnsure(contextFunction) {
       }
       return nodePath;
     })
-    .catch(err => {
+    .finally(() => {
       if (contextFunction) {
         revertPathChanges();
       }
-      throw err;
-    })
-    .then(result => {
-      if (contextFunction) {
-        revertPathChanges();
-      }
-      return result;
     });
-
 }
 
 module.exports = {

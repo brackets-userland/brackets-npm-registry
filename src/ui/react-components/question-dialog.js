@@ -1,6 +1,7 @@
 define(function (require, exports) {
   'use strict';
 
+  const Promise = require('bluebird');
   const Strings = require('strings');
   const Dialogs = brackets.getModule('widgets/Dialogs');
   const React = brackets.getModule('thirdparty/react');
