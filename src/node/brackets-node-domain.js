@@ -8,6 +8,7 @@
   const { promisifyAll } = require('bluebird');
   const fs = promisifyAll(require('fs-extra'));
   const path = require('path');
+  const utils = require('./utils');
   let domainManager = null;
 
   const buildRegistry = function (callback, progressCallback) {
@@ -16,7 +17,8 @@
       let args = ['registry-builder.js'];
 
       return buffspawn(nodePath, args, {
-        cwd: __dirname
+        cwd: __dirname,
+        env: utils.processEnvWithPath(path.dirname(nodePath))
       }).progress(function (buff) {
         if (progressCallback && buff.type === 'stderr') {
           progressCallback(buff.toString());
@@ -60,7 +62,8 @@
       }
 
       return buffspawn(nodePath, ['extension-installer.js', targetPath, name], {
-        cwd: __dirname
+        cwd: __dirname,
+        env: utils.processEnvWithPath(path.dirname(nodePath))
       }).progress(buff => {
         if (buff.type === 'stderr') {
           progressCallback(buff.toString());
