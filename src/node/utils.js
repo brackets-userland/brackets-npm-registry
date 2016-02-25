@@ -7,6 +7,12 @@ const binPath = path.resolve(__dirname, '..', '..', 'node_modules', '.bin');
 
 exports.processEnvWithPath = function(...paths) {
   const processEnvClone = _.cloneDeep(process.env); // eslint-disable-line
-  processEnvClone.Path = paths.concat(binPath, processEnvClone.Path.split(path.delimiter)).join(path.delimiter);
+  ['Path', 'PATH'].forEach(pathName => {
+    if (processEnvClone[pathName]) {
+      processEnvClone[pathName] = paths.concat(
+        binPath, processEnvClone[pathName].split(path.delimiter)
+      ).join(path.delimiter);
+    }
+  });
   return processEnvClone;
 };
