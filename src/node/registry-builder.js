@@ -33,13 +33,26 @@ function buildRegistry(targetFile) {
       // npm is loaded, we can start the search
       // get all entries tagged 'brackets-extension'
       logProgress(`executing npm search brackets-extension`);
-      return fromNode(npm.commands.search.bind(npm.commands, ['brackets-extension'], true));
+      // return fromNode(npm.commands.search.bind(npm.commands, ['brackets-extension'], true));
+      return new Promise((resolve, reject) => {
+        request(`http://npmsearch.com/query?q=keywords:brackets-extension&fields=name`,
+        (error, response, body) => {
+
+          if (error) { return reject(error); }
+          if (!/^2/.test(response.statusCode)) { return reject(body); }
+          if (typeof body === 'string') {
+            try { body = JSON.parse(body); } catch (err) { return reject(err); }
+          }
+          resolve(body.results.map(x => x.name));
+
+        });
+      });
     })
     .then(searchResults => {
       // call view for all potential extensions
       logProgress(`executing npm view to get detailed info about the extensions`);
       let npmView = promisify(npm.commands.view, npm.commands);
-      return all(Object.keys(searchResults).map(
+      return all(searchResults.map(
         extensionId =>
           npmView([extensionId + '@latest'], true).then(result =>
             result[Object.keys(result)[0]]
