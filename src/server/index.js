@@ -30,23 +30,19 @@ buildRegistry = function () {
     logger('going to build a registry.json file to', registryFilePath);
 
     let args = ['../node/registry-builder.js', registryFilePath];
-    let tmpString = '';
 
     return buffspawn(nodePath, args, {
       cwd: __dirname,
       env: utils.processEnvWithPath(path.dirname(nodePath))
     }).progress(function (buff) {
-      if (buff.type === 'stdout') { tmpString += buff.toString(); }
       if (buff.type === 'stderr') { logger('buildRegistry progress =>', buff.toString()); }
-    }).then(function (buff) {
-      if (buff.type === 'stdout') { tmpString += buff.toString(); }
-      if (buff.type === 'stderr') { logger('buildRegistry progress =>', buff.toString()); }
+    }).then(function ([ stdout ]) {
       logger('registry file built at', registryFilePath);
       try {
-        registryJson = JSON.parse(tmpString);
+        registryJson = JSON.parse(stdout);
         logger('registryJson: ' + JSON.stringify(registryJson));
       } catch (err) {
-        logger('failed to parse registryJson from: ' + tmpString);
+        logger('failed to parse registryJson from: ' + stdout);
       }
     }).catch(function () {
       logger('failed to build registry');
