@@ -40,9 +40,10 @@ buildRegistry = function () {
       logger('registry file built at', registryFilePath);
       try {
         registryJson = JSON.parse(stdout);
-        logger('registryJson: ' + JSON.stringify(registryJson));
+        logger('parsed registryJson from stdout');
       } catch (err) {
-        logger('failed to parse registryJson from: ' + stdout);
+        registryJson = null;
+        logger('failed to parse registryJson from stdout: ' + err);
       }
     }).catch(function () {
       logger('failed to build registry');
@@ -58,6 +59,10 @@ buildRegistry = function () {
 app.set('port', process.env.PORT || 5000);
 
 app.get('/registry', function (request, response, next) {
+  if (registryJson) {
+    response.send(registryJson);
+    return;
+  }
   fs.readFile(registryFilePath, {encoding: 'utf8'}, function (err, str) {
     if (err) {
       return next(err);

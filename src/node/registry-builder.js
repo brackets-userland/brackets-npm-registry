@@ -8,8 +8,8 @@ const Promise = require('bluebird');
 const { all, fromNode, promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs'));
 const request = require('request');
-const logOutput = function (...args) { console.log(...args); };
-const logProgress = function (...args) { console.error(...args); };
+const logOutput = (...args) => process.stdout.write(args.join(' '), 'utf8');
+const logProgress = (...args) => process.stderr.write(args.join(' '), 'utf8');
 
 function calculateDownloadMetrics(extensionInfo) {
   let downloadsArray = extensionInfo.downloads;
@@ -170,12 +170,12 @@ function buildRegistry(targetFile) {
     .then(extensionInfos => {
       let strResults = JSON.stringify(extensionInfos, null, 2);
       logProgress(`all done`);
+      logOutput(strResults);
       if (targetFile) {
         logProgress(`writing the results to file:\n`, targetFile);
         return fs.writeFileAsync(targetFile, strResults)
           .then(() => extensionInfos);
       }
-      logOutput(strResults);
       return extensionInfos;
     });
 
