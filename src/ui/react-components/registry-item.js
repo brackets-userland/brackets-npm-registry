@@ -45,7 +45,7 @@ define(function (require, exports, module) {
         <div className="span10 text-left">
           <h1>
             <a className="defaultColor" onClick={this.handleShowNpm.bind(this, this.props.registryInfo.name)} href="#">
-              {registryInfo.name}
+              {registryInfo.title ? registryInfo.title + ' (' + registryInfo.name + ')' : registryInfo.name}
             </a>
           </h1>
           <h2>{registryInfo.description}</h2>
