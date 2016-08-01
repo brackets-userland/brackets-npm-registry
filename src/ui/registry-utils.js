@@ -34,12 +34,17 @@ define(function (require, exports, module) {
       if (b._updateAvailable) { result += 1; }
       if (result !== 0) { return result; }
       // default sort by name
-      return a.name.localeCompare(b.name);
+      return a.sortName.localeCompare(b.sortName);
     });
   };
 
   let afterRegistryDownloaded = function () {
     let updatesAvailable = false;
+
+    npmRegistry.forEach(entry => {
+      entry.displayName = entry.title ? entry.title + ' (' + entry.name + ')' : entry.name;
+      entry.sortName = entry.displayName.toLowerCase();
+    });
 
     getInstalledExtensions().forEach(insExt => {
       let npmInfo = _.find(npmRegistry, npmExt => npmExt.name === insExt.name);
