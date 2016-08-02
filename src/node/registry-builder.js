@@ -67,6 +67,38 @@ function npmView(packageName) {
   });
 }
 
+function getDownloadCounts(extensionInfos) {
+  let from = '2015-01-01';
+  let to = new Date().toISOString().substring(0, 10);
+  let extensionIds = extensionInfos.map(i => i.name);
+  return new Promise((resolve, reject) => {
+    request(`https://api.npmjs.org/downloads/range/${from}:${to}/${extensionIds.join(',')}`, (error, response, body) => {
+
+      if (error) { return reject(error); }
+      if (!/^2/.test(response.statusCode)) { return reject(body); }
+      if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch (err) { return reject(err); }
+      }
+
+      if (extensionIds.length === 1) {
+        extensionInfos[0].downloads = body.downloads;
+        calculateDownloadMetrics(extensionInfos[0]);
+      } else {
+        extensionInfos.forEach(extensionInfo => {
+          let info = body[extensionInfo.name];
+          if (info && info.downloads) {
+            extensionInfo.downloads = info.downloads;
+            calculateDownloadMetrics(extensionInfo);
+          }
+        });
+      }
+
+      resolve(extensionInfos);
+
+    });
+  });
+}
+
 function buildRegistry(targetFile) {
   logProgress(`getting packages with keyword: brackets-extension`);
   getPackagesFromNpmKeyword()
@@ -83,46 +115,7 @@ function buildRegistry(targetFile) {
     .then(extensionInfos => {
       logProgress(`getting download info counts for the extensions`);
       // get download counts for the extensions
-      let extensionIds = extensionInfos.map(i => i.name);
-      let from = '2015-01-01';
-      let to = new Date().toISOString().substring(0, 10);
-      return new Promise((resolve, reject) => {
-        request(`https://api.npmjs.org/downloads/range/${from}:${to}/${extensionIds.join(',')}`,
-        (error, response, body) => {
-
-          if (error) {
-            return reject(error);
-          }
-
-          if (response.statusCode !== 200) {
-            return reject(body);
-          }
-
-          if (typeof body === 'string') {
-            try {
-              body = JSON.parse(body);
-            } catch (err) {
-              return reject(err);
-            }
-          }
-
-          if (extensionIds.length === 1) {
-            extensionInfos[0].downloads = body.downloads;
-            calculateDownloadMetrics(extensionInfos[0]);
-          } else {
-            extensionInfos.forEach(extensionInfo => {
-              let info = body[extensionInfo.name];
-              if (info && info.downloads) {
-                extensionInfo.downloads = info.downloads;
-                calculateDownloadMetrics(extensionInfo);
-              }
-            });
-          }
-
-          resolve(extensionInfos);
-
-        });
-      });
+      return getDownloadCounts(extensionInfos);
     })
     .then(extensionInfos => {
       logProgress(`getting issue/pr counts for the extensions`);
