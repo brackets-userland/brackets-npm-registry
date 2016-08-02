@@ -110,7 +110,17 @@ function buildRegistry(targetFile) {
     .then(viewResults => {
       logProgress(`got all view results (${viewResults.length})`);
       // filter out those, which doesn't have brackets engine specified
-      return viewResults.filter(result => result.engines && result.engines.brackets);
+      return viewResults.filter(result => {
+        for (let version in result.versions) {
+          let def = result.versions[version];
+          if (!def.engines || !def.engines.brackets) {
+            logProgress(`deleting version ${version} from ${result.name}\n`);
+            delete result.versions[version];
+          }
+        }
+        const validVersions = Object.keys(result.versions).length;
+        return validVersions > 0;
+      });
     })
     .then(extensionInfos => {
       logProgress(`getting download info counts for the extensions (${extensionInfos.length})`);
