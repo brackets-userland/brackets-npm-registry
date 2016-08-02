@@ -155,7 +155,6 @@ rules:
   
   #Legacy
   max-depth: [2, 5] #specify the maximum depth that blocks can be nested
-  max-len: [1, 120] #specify the maximum length of a line in your program
   max-params: [2, 5] #limits the number of parameters that can be used in the function declaration.
   max-statements: [1, 50] #specify the maximum number of statement allowed in a function
   no-bitwise: 2 #disallow use of bitwise operators

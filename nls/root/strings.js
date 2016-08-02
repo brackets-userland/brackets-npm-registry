@@ -1,4 +1,3 @@
-/*eslint max-len:0*/
 define({
   AUTHOR: 'Author',
   CANCEL: 'Cancel',

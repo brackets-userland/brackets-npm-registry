@@ -3,10 +3,9 @@
 
 const _ = require('lodash');
 const cheerio = require('cheerio');
-const npm = require('npm');
 const npmKeyword = require('npm-keyword');
 const Promise = require('bluebird');
-const { all, promisify, promisifyAll } = require('bluebird');
+const { all, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs'));
 const request = require('request');
 const logOutput = (...args) => process.stdout.write(args.join(' '), 'utf8');
@@ -50,8 +49,22 @@ function getPackagesFromNpmSearch() { // eslint-disable-line no-unused-vars
   });
 }
 
+// https://registry.npmjs.org/-/_view/byKeyword?startkey=[%22brackets-extension%22]&endkey=[%22brackets-extension%22,%7B%7D]&group_level=2
 function getPackagesFromNpmKeyword() {
   return npmKeyword.names('brackets-extension');
+}
+
+function npmView(packageName) {
+  return new Promise((resolve, reject) => {
+    request(`https://registry.npmjs.org/${packageName}`, (error, response, body) => {
+      if (error) { return reject(error); }
+      if (!/^2/.test(response.statusCode)) { return reject(body); }
+      if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch (err) { return reject(err); }
+      }
+      resolve(body);
+    });
+  });
 }
 
 function buildRegistry(targetFile) {
@@ -60,13 +73,7 @@ function buildRegistry(targetFile) {
     .then(searchResults => {
       // call view for all potential extensions
       logProgress(`executing npm view to get detailed info about the extensions`);
-      let npmView = promisify(npm.commands.view, npm.commands);
-      return all(searchResults.map(
-        extensionId =>
-          npmView([extensionId + '@latest'], true).then(result =>
-            result[Object.keys(result)[0]]
-          )
-      ));
+      return all(searchResults.map(extensionId => npmView(extensionId)));
     })
     .then(viewResults => {
       logProgress(`got all view results`);
