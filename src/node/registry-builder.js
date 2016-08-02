@@ -5,7 +5,7 @@ const _ = require('lodash');
 const cheerio = require('cheerio');
 const npm = require('npm');
 const Promise = require('bluebird');
-const { all, fromNode, promisify, promisifyAll } = require('bluebird');
+const { all, promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs'));
 const request = require('request');
 const logOutput = (...args) => process.stdout.write(args.join(' '), 'utf8');
@@ -25,29 +25,33 @@ function calculateDownloadMetrics(extensionInfo) {
     .reduce((sum, obj) => sum + obj.downloads, 0);
 }
 
-function buildRegistry(targetFile) {
+function getPackagesFromNpmSearch() {
+  return new Promise((resolve, reject) => {
+    request(`http://npmsearch.com/query?q=keywords:brackets-extension&fields=name`,
+    (error, response, body) => {
 
-  logProgress('loading npm');
-  return fromNode(npm.load.bind(npm))
-    .then(() => {
-      // npm is loaded, we can start the search
-      // get all entries tagged 'brackets-extension'
-      logProgress(`executing npm search brackets-extension`);
-      // return fromNode(npm.commands.search.bind(npm.commands, ['brackets-extension'], true));
-      return new Promise((resolve, reject) => {
-        request(`http://npmsearch.com/query?q=keywords:brackets-extension&fields=name`,
-        (error, response, body) => {
-
-          if (error) { return reject(error); }
-          if (!/^2/.test(response.statusCode)) { return reject(body); }
-          if (typeof body === 'string') {
-            try { body = JSON.parse(body); } catch (err) { return reject(err); }
-          }
-          resolve(body.results.map(x => x.name));
-
-        });
+      if (error) { return reject(error); }
+      if (!/^2/.test(response.statusCode)) { return reject(body); }
+      if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch (err) { return reject(err); }
+      }
+      const results = [];
+      body.results.forEach(x => {
+        if (_.isArray(x.name)) {
+          x.name.forEach(n => results.push(n));
+        } else {
+          results.push(x.name);
+        }
       });
-    })
+      resolve(results); // array of strings
+
+    });
+  });
+}
+
+function buildRegistry(targetFile) {
+  logProgress(`getting packages with keyword: brackets-extension`);
+  getPackagesFromNpmSearch()
     .then(searchResults => {
       // call view for all potential extensions
       logProgress(`executing npm view to get detailed info about the extensions`);
