@@ -104,16 +104,16 @@ function buildRegistry(targetFile) {
   getPackagesFromNpmKeyword()
     .then(searchResults => {
       // call view for all potential extensions
-      logProgress(`executing npm view to get detailed info about the extensions`);
+      logProgress(`executing npm view to get detailed info about the extensions (${searchResults.length})`);
       return all(searchResults.map(extensionId => npmView(extensionId)));
     })
     .then(viewResults => {
-      logProgress(`got all view results`);
+      logProgress(`got all view results (${viewResults.length})`);
       // filter out those, which doesn't have brackets engine specified
       return viewResults.filter(result => result.engines && result.engines.brackets);
     })
     .then(extensionInfos => {
-      logProgress(`getting download info counts for the extensions`);
+      logProgress(`getting download info counts for the extensions (${extensionInfos.length})`);
       // get download counts for the extensions
       return getDownloadCounts(extensionInfos).catch(err => {
         logProgress(`getDownloadCounts-error: ${err}`);
