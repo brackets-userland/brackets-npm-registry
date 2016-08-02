@@ -22,7 +22,7 @@
     "url": "https://github.com/zaggino/brackets-npm-registry.git"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "gulp build && node server.js",
     "test": "mocha",
     "install": "gulp build"
   },
@@ -46,6 +46,7 @@
     "gulp-watch": "4.3.5",
     "lodash": "3.10.1",
     "npm": "2.14.5",
+    "npm-keyword": "4.2.0",
     "regenerator": "0.8.35",
     "request": "2.63.0",
     "rimraf": "2.4.3",

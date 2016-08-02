@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const cheerio = require('cheerio');
 const npm = require('npm');
+const npmKeyword = require('npm-keyword');
 const Promise = require('bluebird');
 const { all, promisify, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs'));
@@ -25,7 +26,7 @@ function calculateDownloadMetrics(extensionInfo) {
     .reduce((sum, obj) => sum + obj.downloads, 0);
 }
 
-function getPackagesFromNpmSearch() {
+function getPackagesFromNpmSearch() { // eslint-disable-line no-unused-vars
   return new Promise((resolve, reject) => {
     request(`http://npmsearch.com/query?q=keywords:brackets-extension&fields=name`,
     (error, response, body) => {
@@ -43,15 +44,19 @@ function getPackagesFromNpmSearch() {
           results.push(x.name);
         }
       });
-      resolve(results); // array of strings
+      resolve(results.sort()); // array of strings
 
     });
   });
 }
 
+function getPackagesFromNpmKeyword() {
+  return npmKeyword.names('brackets-extension');
+}
+
 function buildRegistry(targetFile) {
   logProgress(`getting packages with keyword: brackets-extension`);
-  getPackagesFromNpmSearch()
+  getPackagesFromNpmKeyword()
     .then(searchResults => {
       // call view for all potential extensions
       logProgress(`executing npm view to get detailed info about the extensions`);
