@@ -115,7 +115,10 @@ function buildRegistry(targetFile) {
     .then(extensionInfos => {
       logProgress(`getting download info counts for the extensions`);
       // get download counts for the extensions
-      return getDownloadCounts(extensionInfos);
+      return getDownloadCounts(extensionInfos).catch(err => {
+        logProgress(`getDownloadCounts-error: ${err}`);
+        return extensionInfos;
+      });
     })
     .then(extensionInfos => {
       logProgress(`getting issue/pr counts for the extensions`);
