@@ -8,6 +8,7 @@ const Promise = require('bluebird');
 const { all, promisifyAll } = require('bluebird');
 const fs = promisifyAll(require('fs'));
 const request = require('request');
+const semver = require('semver');
 const logOutput = (...args) => process.stdout.write(args.join(' '), 'utf8');
 const logProgress = (...args) => process.stderr.write(args.join(' '), 'utf8');
 
@@ -62,6 +63,10 @@ function npmView(packageName) {
       if (typeof body === 'string') {
         try { body = JSON.parse(body); } catch (err) { return reject(err); }
       }
+
+      // cleanup a bit
+      delete body.readme;
+
       resolve(body);
     });
   });
@@ -109,17 +114,35 @@ function buildRegistry(targetFile) {
     })
     .then(viewResults => {
       logProgress(`got all view results (${viewResults.length})`);
-      // filter out those, which doesn't have brackets engine specified
+      // filter out those, which doesn't have brackets engine specified in any of the versions
       return viewResults.filter(result => {
-        for (let version in result.versions) {
-          let def = result.versions[version];
-          if (!def.engines || !def.engines.brackets) {
-            logProgress(`deleting version ${version} from ${result.name}\n`);
+
+        // versions sorted from latest first
+        let versions = Object.keys(result.versions).sort((a, b) => -1 * semver.compare(a, b));
+
+        // engine versions found in the versions
+        let engines = {};
+
+        // filter out only relevant versions (we don't want duplicates with the same brackets version)
+        versions = versions.filter(version => {
+          let bracketsEngine = _.get(result.versions[version], 'engines.brackets');
+          if (!bracketsEngine || engines[bracketsEngine]) {
             delete result.versions[version];
+            return false;
           }
+          engines[bracketsEngine] = true;
+          return true;
+        });
+
+        if (versions.length === 0) {
+          logProgress(`filtering out ${result.name} because no valid versions with brackets-engine were found\n`);
+          return false;
         }
-        const validVersions = Object.keys(result.versions).length;
-        return validVersions > 0;
+
+        // add data from the latest version to the root
+        _.defaults(result, result.versions[versions[0]]);
+
+        return true;
       });
     })
     .then(extensionInfos => {
