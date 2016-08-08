@@ -1,7 +1,7 @@
 {
   "name": "brackets-npm-registry",
   "title": "NPM Registry",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Install your extensions into Brackets using npm",
   "keywords": [
     "brackets-extension",
@@ -34,17 +34,9 @@
     "cheerio": "0.19.0",
     "core-js": "1.1.4",
     "cross-spawn": "2.0.0",
-    "eslint": "1.5.1",
     "eventemitter2": "0.4.14",
     "express": "4.13.3",
     "fs-extra": "0.24.0",
-    "gulp": "3.9.0",
-    "gulp-babel": "5.2.1",
-    "gulp-cli": "1.0.0",
-    "gulp-eslint": "1.0.0",
-    "gulp-sourcemaps": "1.5.2",
-    "gulp-util": "3.0.6",
-    "gulp-watch": "4.3.5",
     "lodash": "3.10.1",
     "npm": "2.14.5",
     "npm-keyword": "4.2.0",
@@ -52,12 +44,20 @@
     "request": "2.63.0",
     "rimraf": "2.4.3",
     "semver": "4.3.6",
-    "through2": "2.0.0",
     "which": "1.1.2"
   },
   "devDependencies": {
     "chai": "3.3.0",
-    "mocha": "2.3.3"
+    "eslint": "1.5.1",
+    "gulp": "3.9.0",
+    "gulp-babel": "5.2.1",
+    "gulp-cli": "1.0.0",
+    "gulp-eslint": "1.0.0",
+    "gulp-sourcemaps": "1.5.2",
+    "gulp-util": "3.0.6",
+    "gulp-watch": "4.3.5",
+    "mocha": "2.3.3",
+    "through2": "2.0.0"
   },
   "engines": {
     "brackets": ">=1.4.0",
