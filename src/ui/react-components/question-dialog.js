@@ -5,6 +5,7 @@ define(function (require, exports) {
   const Strings = require('strings');
   const Dialogs = brackets.getModule('widgets/Dialogs');
   const React = brackets.getModule('thirdparty/react');
+  const ReactDOM = brackets.getModule('thirdparty/react-dom');
   let dialog = null;
 
   let QuestionDialog = React.createClass({
@@ -31,7 +32,7 @@ define(function (require, exports) {
     let template = '<div class="template modal"/>';
     dialog = Dialogs.showModalDialogUsingTemplate(template);
     let $dialog = dialog.getElement();
-    React.render(<QuestionDialog title={title} question={question} default={defValue} />, $dialog[0]);
+    ReactDOM.render(<QuestionDialog title={title} question={question} default={defValue} />, $dialog[0]);
 
     return new Promise(function (resolve, reject) {
       dialog.done(function (buttonId) {

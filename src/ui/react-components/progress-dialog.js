@@ -4,6 +4,7 @@ define(function (require, exports) {
   const Strings = require('strings');
   const Dialogs = brackets.getModule('widgets/Dialogs');
   const React = brackets.getModule('thirdparty/react');
+  const ReactDOM = brackets.getModule('thirdparty/react-dom');
   const Utils = require('../../utils/index');
   let dialog = null;
 
@@ -76,7 +77,7 @@ define(function (require, exports) {
     let template = '<div class="template modal"/>';
     dialog = Dialogs.showModalDialogUsingTemplate(template, false);
     let $dialog = dialog.getElement();
-    React.render(<ProgressDialog promise={promise} />, $dialog[0]);
+    ReactDOM.render(<ProgressDialog promise={promise} />, $dialog[0]);
   };
 
   exports.show = show;

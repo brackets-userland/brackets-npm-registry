@@ -32,7 +32,8 @@ define(function (require, exports, module) {
     }
 
     error(...args) {
-      console.error(this.prefix + stringify(args));
+      const err = new Error();
+      console.error(this.prefix + stringify(args) + '\n' + err.stack);
     }
 
   };

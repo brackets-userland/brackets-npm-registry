@@ -7,6 +7,7 @@ define(function (require, exports) {
   const DefaultDialogs = brackets.getModule('widgets/DefaultDialogs');
   const Logger = require('../../utils/logger');
   const React = brackets.getModule('thirdparty/react');
+  const ReactDOM = brackets.getModule('thirdparty/react-dom');
   const Strings = require('strings');
   const BracketsStrings = brackets.getModule('strings');
   const RegistryItem = require('./registry-item');
@@ -118,7 +119,7 @@ define(function (require, exports) {
     let template = '<div id="brackets-npm-registry-dialog" class="template modal"/>';
     let dialog = Dialogs.showModalDialogUsingTemplate(template);
     let $dialog = dialog.getElement();
-    React.render(<RegistryDialog/>, $dialog[0]);
+    ReactDOM.render(<RegistryDialog/>, $dialog[0]);
     dialog.done(() => {
       React.unmountComponentAtNode($dialog[0]);
       afterClose();

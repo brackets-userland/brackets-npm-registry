@@ -53,7 +53,11 @@ define(function (require, exports, module) {
       if (!npmInfo) { return; }
 
       npmInfo._currentlyInstalled = true;
-      npmInfo._updateAvailable = semver.gt(npmInfo.version, insExt.version);
+      if (npmInfo.version && insExt.version) {
+        npmInfo._updateAvailable = semver.gt(npmInfo.version, insExt.version);
+      } else {
+        npmInfo._updateAvailable = true;
+      }
       if (npmInfo._updateAvailable) { updatesAvailable = true; }
     });
 
