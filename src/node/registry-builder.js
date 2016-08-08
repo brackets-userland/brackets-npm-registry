@@ -6,7 +6,8 @@ const cheerio = require('cheerio');
 const npmKeyword = require('npm-keyword');
 const Promise = require('bluebird');
 const { all, promisifyAll } = require('bluebird');
-const fs = promisifyAll(require('fs'));
+const fs = promisifyAll(require('fs-extra'));
+const path = require('path');
 const request = require('request');
 const semver = require('semver');
 const logOutput = (...args) => process.stdout.write(args.join(' '), 'utf8');
@@ -218,7 +219,8 @@ function buildRegistry(targetFile) {
       logOutput(strResults);
       if (targetFile) {
         logProgress(`writing the results to file:\n`, targetFile);
-        return fs.writeFileAsync(targetFile, strResults)
+        return fs.ensureDirAsync(path.dirname(targetFile))
+          .then(() => fs.writeFileAsync(targetFile, strResults))
           .then(() => extensionInfos);
       }
       return extensionInfos;

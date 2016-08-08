@@ -1,7 +1,7 @@
 {
   "name": "brackets-npm-registry",
   "title": "NPM Registry",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Install your extensions into Brackets using npm",
   "keywords": [
     "brackets-extension",
