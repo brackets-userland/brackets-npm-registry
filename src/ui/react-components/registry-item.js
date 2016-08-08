@@ -98,8 +98,8 @@ define(function (require, exports, module) {
     getDependencies: function () {
       let mapper = (version, name) => { return {name, version}; };
       let dependencies = [].concat(
-        _.map(this.props.registryInfo.dependencies, mapper),
-        _.map(this.props.registryInfo.devDependencies, mapper)
+        _.map(this.props.registryInfo.dependencies, mapper)
+        // , _.map(this.props.registryInfo.devDependencies, mapper)
       );
       return _.sortBy(dependencies, 'name');
     },
