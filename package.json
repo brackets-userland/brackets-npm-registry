@@ -23,9 +23,9 @@
     "url": "https://github.com/zaggino/brackets-npm-registry.git"
   },
   "scripts": {
+    "prepublish": "gulp build",
     "start": "gulp build && node server.js",
-    "test": "mocha",
-    "install": "gulp build"
+    "test": "mocha"
   },
   "dependencies": {
     "babel-core": "5.8.25",
