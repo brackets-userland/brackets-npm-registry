@@ -55,10 +55,12 @@ mac：	cd ~/Library/Application\ Support/Brackets/extensions/user/
 	cd brackets-npm-registry
   
 4、通过npm安装
+######       !!! 如果没有插件图标![icon.svg](icon.svg)，可能就是没有这一步骤
 
 	npm install
-  
- #####   !!! 如果没有插件图标![icon.svg](icon.svg)，可能就是没有这一步骤
+ 
+
+
 
 
 ## How to use brackets-npm-registry
