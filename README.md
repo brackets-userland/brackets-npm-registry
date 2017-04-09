@@ -37,16 +37,14 @@ cd brackets-npm-registry
 npm install
 ```
 ## Extra：for Chinese
+
 1、进入brackets插件目录：Show Extensions Floder
 
-`
-windows：
-  cd /D %HOMEDRIVE%%HOMEPATH%\AppData\Roaming\Brackets\extensions\user
-linux：
-  cd ~/.config/Brackets/extensions/user
-mac：
-  cd ~/Library/Application\ Support/Brackets/extensions/user/
-`
+```
+windows：cd /D %HOMEDRIVE%%HOMEPATH%\AppData\Roaming\Brackets\extensions\user
+linux：	cd ~/.config/Brackets/extensions/user
+mac：	cd ~/Library/Application\ Support/Brackets/extensions/user/
+```
 
 2、下载文件到当前文件夹：git clone \<url> \<re_name>
 
@@ -57,11 +55,11 @@ mac：
 	cd brackets-npm-registry
   
 4、通过npm安装
-#####   !!! 如果没有插件图标，可能就是没有这一步骤
-![icon.svg](styles\icon.svg)
 
 	npm install
   
+ #####   !!! 如果没有插件图标![icon.svg](icon.svg)，可能就是没有这一步骤
+
 
 ## How to use brackets-npm-registry
 
